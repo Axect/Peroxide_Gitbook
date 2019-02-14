@@ -1,0 +1,18 @@
+--- 
+title: "Peroxide Guide"
+author: "Axect"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: Axect/Peroxide_Gitbook
+description: "This book is a guide for Peroxide - Rust numerical library"
+---
+
+# Prerequisites
+
+* [Rust](https://www.rust-lang.org/tools/install)
+* [Peroxide](https://crates.io/crates/peroxide)
