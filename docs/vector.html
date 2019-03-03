@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Peroxide Guide</title>
+  <title>3 Vector | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Peroxide Guide" />
+  <meta property="og:title" content="3 Vector | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Peroxide Guide" />
+  <meta name="twitter:title" content="3 Vector | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="quick.html">
+<link rel="prev" href="quick.html">
+<link rel="next" href="matrix.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -167,26 +167,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Peroxide Guide</h1>
-<p class="author"><em>Axect</em></p>
-<p class="date"><em>2019-03-03</em></p>
-</div>
-<div id="prerequisites" class="section level1">
-<h1><span class="header-section-number">1</span> Prerequisites</h1>
+<div id="vector" class="section level1">
+<h1><span class="header-section-number">3</span> Vector</h1>
+<div id="syntax-sugar-for-vecf64" class="section level2">
+<h2><span class="header-section-number">3.1</span> Syntax sugar for <code>Vec&lt;f64&gt;</code></h2>
 <ul>
-<li><a href="https://www.rust-lang.org/tools/install">Rust</a></li>
-<li><a href="https://crates.io/crates/peroxide">Peroxide</a></li>
+<li>There is useful macro for <code>Vec&lt;f64&gt;</code></li>
+<li>For <code>R</code>, there is <code>c</code></li>
 </ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R</span>
+a =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</code></pre>
+<ul>
+<li>For <code>Peroxide</code>, there is <code>c!</code></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="co">// Rust</span>
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+<span class="op">}</span></code></pre>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="quick.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="quick.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="matrix.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -216,7 +223,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/index.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/02-vector.Rmd",
 "text": "Edit"
 },
 "history": {

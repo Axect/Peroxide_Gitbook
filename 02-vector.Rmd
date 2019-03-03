@@ -1,0 +1,20 @@
+# Vector {#vector}
+
+## Syntactic sugar for `Vec<f64>`
+
+* There is useful macro for `Vec<f64>`
+* For `R`, there is `c`
+
+```R
+# R
+a = c(1,2,3,4)
+```
+
+* For `Peroxide`, there is `c!`
+
+```rust
+// Rust
+fn main() {
+    let a = c!(1,2,3,4);
+}
+```

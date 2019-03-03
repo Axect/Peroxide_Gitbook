@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Peroxide Guide</title>
+  <title>2 Quick Start | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Peroxide Guide" />
+  <meta property="og:title" content="2 Quick Start | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Peroxide Guide" />
+  <meta name="twitter:title" content="2 Quick Start | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-
-<link rel="next" href="quick.html">
+<link rel="prev" href="index.html">
+<link rel="next" href="vector.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -167,26 +167,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Peroxide Guide</h1>
-<p class="author"><em>Axect</em></p>
-<p class="date"><em>2019-03-03</em></p>
-</div>
-<div id="prerequisites" class="section level1">
-<h1><span class="header-section-number">1</span> Prerequisites</h1>
+<div id="quick" class="section level1">
+<h1><span class="header-section-number">2</span> Quick Start</h1>
+<div id="cargo.toml" class="section level2">
+<h2><span class="header-section-number">2.1</span> Cargo.toml</h2>
 <ul>
-<li><a href="https://www.rust-lang.org/tools/install">Rust</a></li>
-<li><a href="https://crates.io/crates/peroxide">Peroxide</a></li>
+<li>To use <code>peroxide</code>, you should edit <code>Cargo.toml</code></li>
 </ul>
+<pre class="toml"><code>peroxide = &quot;0.8.5&quot;</code></pre>
+</div>
+<div id="import-all-at-once" class="section level2">
+<h2><span class="header-section-number">2.2</span> Import all at once</h2>
+<ul>
+<li>You can import all functions &amp; structures at once</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
+<span class="kw">use</span> <span class="pp">peroxide::</span>*;
 
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="co">//Some codes...</span>
+<span class="op">}</span></code></pre>
+
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-
-<a href="quick.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="vector.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -216,7 +226,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/index.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-quick_start.Rmd",
 "text": "Edit"
 },
 "history": {

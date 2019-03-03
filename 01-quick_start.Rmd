@@ -1,0 +1,22 @@
+# Quick Start {#quick}
+
+## Cargo.toml
+
+* To use `peroxide`, you should edit `Cargo.toml`
+
+```toml
+peroxide = "0.8.5"
+```
+
+## Import all at once
+
+* You can import all functions & structures at once
+
+```rust
+extern crate peroxide;
+use peroxide::*;
+
+fn main() {
+    //Some codes...
+}
+```
