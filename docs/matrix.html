@@ -148,6 +148,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1.3" data-path="matrix.html"><a href="matrix.html#pythons-way"><i class="fa fa-check"></i><b>4.1.3</b> Python’s way</a></li>
 <li class="chapter" data-level="4.1.4" data-path="matrix.html"><a href="matrix.html#other-macro"><i class="fa fa-check"></i><b>4.1.4</b> Other macro</a></li>
 </ul></li>
+<li class="chapter" data-level="4.2" data-path="matrix.html"><a href="matrix.html#basic-method-for-matrix"><i class="fa fa-check"></i><b>4.2</b> Basic Method for Matrix</a></li>
+<li class="chapter" data-level="4.3" data-path="matrix.html"><a href="matrix.html#read-write"><i class="fa fa-check"></i><b>4.3</b> Read &amp; Write</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -256,8 +258,68 @@ a =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</s
     <span class="co">// r[0]     1    2</span>
     <span class="co">// r[1]     3    4</span>
 <span class="op">}</span></code></pre>
-
 </div>
+</div>
+<div id="basic-method-for-matrix" class="section level2">
+<h2><span class="header-section-number">4.2</span> Basic Method for Matrix</h2>
+<p>There are some useful methods for <code>Matrix</code></p>
+<ul>
+<li><code>row(&amp;self, index: usize) -&gt; Vec&lt;f64&gt;</code> : Extract specific row as <code>Vec&lt;f64&gt;</code></li>
+<li><code>col(&amp;self, index: usize) -&gt; Vec&lt;f64&gt;</code> : Extract specific column as <code>Vec&lt;f64&gt;</code></li>
+<li><code>diag(&amp;self) -&gt; Vec&lt;f64&gt;</code>: Extract diagonal components as <code>Vec&lt;f64&gt;</code></li>
+<li><code>swap(&amp;self, usize, usize, Shape) -&gt; Matrix</code>: Swap two rows or columns</li>
+<li><code>subs_col(&amp;mut self, usize, Vec&lt;f64&gt;)</code>: Substitute column with <code>Vec&lt;f64&gt;</code></li>
+<li><code>subs_row(&amp;mut self, usize, Vec&lt;f64&gt;)</code>: Substitute row with <code>Vec&lt;f64&gt;</code></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2; 3 4&quot;</span>);
+    
+    a.row(<span class="dv">0</span>).print(); <span class="co">// [1, 2]</span>
+    a.col(<span class="dv">0</span>).print(); <span class="co">// [1, 3]</span>
+    a.diag().print(); <span class="co">// [1, 4]</span>
+    a.swap(<span class="dv">0</span>, <span class="dv">1</span>, Row).print();
+    <span class="co">//      c[0] c[1]</span>
+    <span class="co">// r[0]    3    4</span>
+    <span class="co">// r[1]    1    2</span>
+
+    <span class="kw">let</span> <span class="kw">mut</span> b = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
+    b.subs_col(<span class="dv">0</span>, <span class="pp">c!</span>(<span class="dv">5</span>, <span class="dv">6</span>));
+    b.subs_row(<span class="dv">1</span>, <span class="pp">c!</span>(<span class="dv">7</span>, <span class="dv">8</span>));
+    b.print();
+    <span class="co">//       c[0] c[1]</span>
+    <span class="co">// r[0]    5    2</span>
+    <span class="co">// r[1]    7    8</span>
+<span class="op">}</span></code></pre>
+</div>
+<div id="read-write" class="section level2">
+<h2><span class="header-section-number">4.3</span> Read &amp; Write</h2>
+<p>In peroxide, we can write matrix to csv.</p>
+<ul>
+<li><code>write(&amp;self, file_path: &amp;str)</code>: Write matrix to csv</li>
+<li><code>write_with_header(&amp;self, file_path, header: Vec&lt;&amp;str&gt;)</code>: Write with header</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
+    a.write(<span class="st">&quot;matrix.csv&quot;</span>).expect(<span class="st">&quot;Can&#39;t write file&quot;</span>);
+    
+    <span class="kw">let</span> b = ml_matrix(<span class="st">&quot;1 2; 3 4; 5 6&quot;</span>);
+    b.write_with_header(<span class="st">&quot;header.csv&quot;</span>, <span class="pp">vec!</span><span class="op">[</span><span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span><span class="op">]</span>)
+        .expect(<span class="st">&quot;Can&#39;t write header file&quot;</span>);
+<span class="op">}</span></code></pre>
+<p>Also, you can read matrix from csv.</p>
+<ul>
+<li>Type: <code>read(&amp;str, bool, char) -&gt; Result&lt;Matrix, Box&lt;Error&gt;&gt;</code></li>
+<li>Description: <code>read(file_path, is_header, delimiter)</code></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = read(<span class="st">&quot;matrix.csv&quot;</span>, <span class="cn">false</span>, <span class="ch">&#39;,&#39;</span>)
+        .expect(<span class="st">&quot;Can&#39;t read matrix.csv file&quot;</span>);
+    a.print();
+    <span class="co">//       c[0] c[1]</span>
+    <span class="co">// r[0]     1    2</span>
+    <span class="co">// r[1]     3    4</span>
+<span class="op">}</span></code></pre>
+
 </div>
 </div>
             </section>
