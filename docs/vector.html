@@ -136,7 +136,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.2" data-path="quick.html"><a href="quick.html#import-all-at-once"><i class="fa fa-check"></i><b>2.2</b> Import all at once</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="vector.html"><a href="vector.html"><i class="fa fa-check"></i><b>3</b> Vector</a><ul>
-<li class="chapter" data-level="3.1" data-path="vector.html"><a href="vector.html#syntax-sugar-for-vecf64"><i class="fa fa-check"></i><b>3.1</b> Syntax sugar for <code>Vec&lt;f64&gt;</code></a></li>
+<li class="chapter" data-level="3.1" data-path="vector.html"><a href="vector.html#print-vecf64"><i class="fa fa-check"></i><b>3.1</b> Print <code>Vec&lt;f64&gt;</code></a></li>
+<li class="chapter" data-level="3.2" data-path="vector.html"><a href="vector.html#syntactic-sugar-for-vecf64"><i class="fa fa-check"></i><b>3.2</b> Syntactic sugar for <code>Vec&lt;f64&gt;</code></a></li>
+<li class="chapter" data-level="3.3" data-path="vector.html"><a href="vector.html#from-ranges-to-vector"><i class="fa fa-check"></i><b>3.3</b> From ranges to Vector</a></li>
+<li class="chapter" data-level="3.4" data-path="vector.html"><a href="vector.html#vector-operation"><i class="fa fa-check"></i><b>3.4</b> Vector Operation</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="matrix.html"><a href="matrix.html"><i class="fa fa-check"></i><b>4</b> Matrix</a><ul>
 <li class="chapter" data-level="4.1" data-path="matrix.html"><a href="matrix.html#declare-matrix"><i class="fa fa-check"></i><b>4.1</b> Declare matrix</a><ul>
@@ -169,8 +172,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="vector" class="section level1">
 <h1><span class="header-section-number">3</span> Vector</h1>
-<div id="syntax-sugar-for-vecf64" class="section level2">
-<h2><span class="header-section-number">3.1</span> Syntax sugar for <code>Vec&lt;f64&gt;</code></h2>
+<div id="print-vecf64" class="section level2">
+<h2><span class="header-section-number">3.1</span> Print <code>Vec&lt;f64&gt;</code></h2>
+<ul>
+<li>There are two ways to print vector
+<ul>
+<li>Original way: <code>print!("{:?}", a);</code></li>
+<li>Peroxide way: <code>a.print();</code> - <strong>Round to fourth digit</strong></li>
+</ul></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">vec!</span><span class="op">[</span><span class="dv">2f64</span>.sqrt()<span class="op">]</span>;
+    a.print(); <span class="co">// [1.4142]</span>
+<span class="op">}</span></code></pre>
+</div>
+<div id="syntactic-sugar-for-vecf64" class="section level2">
+<h2><span class="header-section-number">3.2</span> Syntactic sugar for <code>Vec&lt;f64&gt;</code></h2>
 <ul>
 <li>There is useful macro for <code>Vec&lt;f64&gt;</code></li>
 <li>For <code>R</code>, there is <code>c</code></li>
@@ -183,6 +200,74 @@ a =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,
 <pre class="sourceCode rust"><code class="sourceCode rust"><span class="co">// Rust</span>
 <span class="kw">fn</span> main() <span class="op">{</span>
     <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+<span class="op">}</span></code></pre>
+</div>
+<div id="from-ranges-to-vector" class="section level2">
+<h2><span class="header-section-number">3.3</span> From ranges to Vector</h2>
+<ul>
+<li>For <code>R</code>, there is <code>seq</code> to declare sequence.</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R</span>
+a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>)
+<span class="kw">print</span>(a)
+<span class="co"># [1] 1 2 3 4</span></code></pre>
+<ul>
+<li>For <code>peroxide</code>, there is <code>seq</code> to declare sequence.</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = seq(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>);
+    a.print();
+    <span class="co">// [1, 2, 3, 4]</span>
+<span class="op">}</span></code></pre>
+</div>
+<div id="vector-operation" class="section level2">
+<h2><span class="header-section-number">3.4</span> Vector Operation</h2>
+<ul>
+<li>There are some vector-wise operations
+<ul>
+<li><code>add(&amp;self, other: Vec&lt;f64&gt;) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>sub(&amp;self, other: Vec&lt;f64&gt;) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>mul(&amp;self, other: Vec&lt;f64&gt;) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>div(&amp;self, other: Vec&lt;f64&gt;) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>dot(&amp;self, other: Vec&lt;f64&gt;) -&gt; f64</code></li>
+<li><code>norm(&amp;self) -&gt; f64</code></li>
+</ul></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);
+
+    a.add(&amp;b).print();
+    a.sub(&amp;b).print();
+    a.mul(&amp;b).print();
+    a.div(&amp;b).print();
+    a.dot(&amp;b).print();
+    a.norm().print();
+
+    <span class="co">// [5, 5, 5, 5]</span>
+    <span class="co">// [-3, -1, 1, 3]</span>
+    <span class="co">// [4, 6, 6, 4]</span>
+    <span class="co">// [0.25, 0.6667, 1.5, 4]</span>
+    <span class="co">// 20</span>
+    <span class="co">// 5.477225575051661 // sqrt(30)</span>
+<span class="op">}</span></code></pre>
+<ul>
+<li>And there are some useful operations too.
+<ul>
+<li><code>pow(&amp;self, usize) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>powf(&amp;self, f64) -&gt; Vec&lt;f64&gt;</code></li>
+<li><code>sqrt(&amp;self) -&gt; Vec&lt;f64&gt;</code></li>
+</ul></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+
+    a.pow(<span class="dv">2</span>).print();
+    a.powf(<span class="dv">0.5</span>).print();
+    a.sqrt().print();
+    <span class="co">// [1, 4, 9, 16]</span>
+    <span class="co">// [1, 1.4142, 1.7321, 2]</span>
+    <span class="co">// [1, 1.4142, 1.7321, 2]</span>
 <span class="op">}</span></code></pre>
 
 </div>

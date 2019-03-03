@@ -1,5 +1,18 @@
 # Vector {#vector}
 
+## Print `Vec<f64>`
+
+* There are two ways to print vector
+    * Original way: `print!("{:?}", a);`
+    * Peroxide way: `a.print();` - **Round to fourth digit**
+
+```rust
+fn main() {
+    let a = vec![2f64.sqrt()];
+    a.print(); // [1.4142]
+}
+```
+
 ## Syntactic sugar for `Vec<f64>`
 
 * There is useful macro for `Vec<f64>`
@@ -16,5 +29,75 @@ a = c(1,2,3,4)
 // Rust
 fn main() {
     let a = c!(1,2,3,4);
+}
+```
+
+## From ranges to Vector
+
+* For `R`, there is `seq` to declare sequence.
+
+```R
+# R
+a = seq(1, 4, 1)
+print(a)
+# [1] 1 2 3 4
+```
+
+* For `peroxide`, there is `seq` to declare sequence.
+
+```rust
+fn main() {
+    let a = seq(1, 4, 1);
+    a.print();
+    // [1, 2, 3, 4]
+}
+```
+
+## Vector Operation
+
+* There are some vector-wise operations
+    * `add(&self, other: Vec<f64>) -> Vec<f64>`
+    * `sub(&self, other: Vec<f64>) -> Vec<f64>`
+    * `mul(&self, other: Vec<f64>) -> Vec<f64>`
+    * `div(&self, other: Vec<f64>) -> Vec<f64>`
+    * `dot(&self, other: Vec<f64>) -> f64`
+    * `norm(&self) -> f64`
+
+```rust
+fn main() {
+    let a = c!(1,2,3,4);
+    let b = c!(4,3,2,1);
+
+    a.add(&b).print();
+    a.sub(&b).print();
+    a.mul(&b).print();
+    a.div(&b).print();
+    a.dot(&b).print();
+    a.norm().print();
+
+    // [5, 5, 5, 5]
+    // [-3, -1, 1, 3]
+    // [4, 6, 6, 4]
+    // [0.25, 0.6667, 1.5, 4]
+    // 20
+    // 5.477225575051661 // sqrt(30)
+}
+```
+
+* And there are some useful operations too.
+    * `pow(&self, usize) -> Vec<f64>`
+    * `powf(&self, f64) -> Vec<f64>`
+    * `sqrt(&self) -> Vec<f64>`
+
+```rust
+fn main() {
+    let a = c!(1,2,3,4);
+
+    a.pow(2).print();
+    a.powf(0.5).print();
+    a.sqrt().print();
+    // [1, 4, 9, 16]
+    // [1, 1.4142, 1.7321, 2]
+    // [1, 1.4142, 1.7321, 2]
 }
 ```
