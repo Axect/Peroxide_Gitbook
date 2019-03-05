@@ -220,3 +220,51 @@ fn main() {
     //  r[1]    3    4
 }
 ```
+
+## Conversion between vector
+
+### Vector to Matrix
+
+`to_matrix` method allows conversion from vector to column matrix.
+
+```rust
+fn main() {
+    let a = c!(1,2,3,4);
+    a.to_matrix().print();
+    //      c[0]
+    // r[0]    1
+    // r[1]    2
+    // r[2]    3
+    // r[3]    4
+}
+```
+
+### Matrix to Vector
+
+Just use `row` or `col` method (I already showed at Basic method section).
+
+```rust
+fn main() {
+    let a = matrix!(1;4;1, 2, 2, Row);
+    a.row(0).print(); // [1, 2]
+}
+```
+
+## Useful constructor
+
+* `zeros(usize, usize)`: Construct matrix which elements are all zero
+* `eye(usize)`: Identity matrix
+* `rand(usize, usize)`: Construct random uniform matrix (from 0 to 1)
+
+```rust
+fn main() {
+    let a = zeros(2, 2);
+    assert_eq!(a, ml_matrix("0 0;0 0"));
+
+    let b = eye(2);
+    assert_eq!(b, ml_matrix("1 0;0 1"));
+
+    let c = rand(2, 2);
+    c.print(); // Random 2x2 matrix
+}
+```
