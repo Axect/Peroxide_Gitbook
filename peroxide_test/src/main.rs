@@ -2,6 +2,6 @@ extern crate peroxide;
 use peroxide::*;
 
 fn main() {
-    let a = rand(2, 2);
-    a.print();
+    let a = matrix!(1;4;1, 2, 2, Row);
+    a.inv().unwrap().print();
 }

@@ -2,19 +2,19 @@
 
 ## Transpose
 
-Caution: Transpose does not consume the original value.
+* Caution: Transpose does not consume the original value.
 
-```rust
-fn main() {
-    let a = matrix!(1;4;1, 2, 2, Row);
-    a.transpose().print();
-    // Or you can use shorter one
-    a.t().print();
-    //      c[0] c[1]
-    // r[0]    1    3
-    // r[1]    2    4
-}
-```
+    ```rust
+    fn main() {
+        let a = matrix!(1;4;1, 2, 2, Row);
+        a.transpose().print();
+        // Or you can use shorter one
+        a.t().print();
+        //      c[0] c[1]
+        // r[0]    1    3
+        // r[1]    2    4
+    }
+    ```
 
 ## LU Decomposition
 
@@ -27,45 +27,100 @@ fn main() {
     * `l` means lower triangular matrix
     * `u` menas upper triangular matrix
 * The structure of `PQLU` is as follows:
-```rust
-#[derive(Debug, Clone)]
-pub struct PQLU {
-    pub p: Perms,
-    pub q: Perms,
-    pub l: Matrix,
-    pub u: Matrix,
-}
 
-pub type Perms = Vec<(usize, usize)>;
-```
+    ```rust
+    #[derive(Debug, Clone)]
+    pub struct PQLU {
+        pub p: Perms,
+        pub q: Perms,
+        pub l: Matrix,
+        pub u: Matrix,
+    }
+
+    pub type Perms = Vec<(usize, usize)>;
+    ```
 
 * Example of LU decomposition:
 
-```rust
-fn main() {
-    let a = matrix(c!(1,2,3,4), 2, 2, Row);
-    let pqlu = a.lu().unwrap(); // unwrap because of Option
-    let (p,q,l,u) = (pqlu.p, pqlu.q, pqlu.l, pqlu.u);
-    assert_eq!(p, vec![(0,1)]); // swap 0 & 1 (Row)
-    assert_eq!(q, vec![(0,1)]); // swap 0 & 1 (Col)
-    assert_eq!(l, matrix(c!(1,0,0.5,1),2,2,Row));
-    //      c[0] c[1]
-    // r[0]    1    0
-    // r[1]  0.5    1
-    assert_eq!(u, matrix(c!(4,3,0,-0.5),2,2,Row));
-    //      c[0] c[1]
-    // r[0]    4    3
-    // r[1]    0 -0.5
-}
-```
+    ```rust
+    fn main() {
+        let a = matrix(c!(1,2,3,4), 2, 2, Row);
+        let pqlu = a.lu().unwrap(); // unwrap because of Option
+        let (p,q,l,u) = (pqlu.p, pqlu.q, pqlu.l, pqlu.u);
+        assert_eq!(p, vec![(0,1)]); // swap 0 & 1 (Row)
+        assert_eq!(q, vec![(0,1)]); // swap 0 & 1 (Col)
+        assert_eq!(l, matrix(c!(1,0,0.5,1),2,2,Row));
+        //      c[0] c[1]
+        // r[0]    1    0
+        // r[1]  0.5    1
+        assert_eq!(u, matrix(c!(4,3,0,-0.5),2,2,Row));
+        //      c[0] c[1]
+        // r[0]    4    3
+        // r[1]    0 -0.5
+    }
+    ```
 
 ## Determinant
 
 * Peroxide uses LU decomposition to obtain determinant ($\mathcal{O}(n^3)$)
+    
+    ```rust
+    fn main() {
+        let a = matrix!(1;4;1, 2, 2, Row);
+        assert_eq!(a.det(), -2f64);
+    }
+    ```
 
-```rust
-fn main() {
-    let a = matrix!(1;4;1, 2, 2, Row);
-    assert_eq!(a.det(), -2f64);
-}
-```
+## Inverse matrix
+
+* Peroxide uses LU decomposition to obtain inverse matrix.
+* It needs two sub functions - `inv_l`, `inv_u`
+    * For inverse of `L, U`, I use block partitioning. For example, for lower triangular matrix :
+    $$\begin{aligned}
+    L &= \begin{pmatrix}
+        L_1 & \mathbf{0} \\
+        L_2 & L_3 
+    \end{pmatrix} \\
+    L^{-1} &= \begin{pmatrix}
+        L_1^{-1} & \mathbf{0} \\
+        -L_3^{-1}L_2 L_1^{-1} & L_3^{-1}
+    \end{pmatrix}
+    \end{aligned}
+    $$
+    ```rust
+    fn main() {
+        let a = matrix!(1;4;1, 2, 2, Row);
+        a.inv().unwrap().print();
+        //      c[0] c[1]
+        // r[0]   -2    1
+        // r[1]  1.5 -0.5
+    }
+    ```
+
+## Moore-Penrose Pseudo Inverse
+
+* $X^\dagger = \left(X^T X\right)^{-1} X$
+
+    ```rust
+    fn main() {
+        let a = matrix!(1;4;1, 2, 2, Row);
+        let pinv_a = a.psudo_inv().unwrap();
+        let inv_a = a.inv().unwrap();
+
+        assert_eq!(inv_a, pinv_a); // Nearly equal (not actually equal)
+    }
+
+    // PartialEq implements
+    impl PartialEq for Matrix {
+        fn eq(&self, other: &Matrix) -> bool {
+            if self.shape == other.shape {
+                self.data.clone()
+                    .into_iter()
+                    .zip(other.data.clone())
+                    .all(|(x, y)| nearly_eq(x,y)) && self.row == other.row
+            } else {
+                self.eq(&other.change_shape())
+            }
+        }
+    }
+    ```

@@ -1,0 +1,949 @@
+\documentclass[]{book}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Peroxide Guide},
+            pdfauthor={Axect},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{natbib}
+\bibliographystyle{apalike}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Peroxide Guide}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Axect}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2019-03-07}
+
+\usepackage{booktabs}
+\usepackage{amsthm}
+\makeatletter
+\def\thm@space@setup{%
+  \thm@preskip=8pt plus 2pt minus 4pt
+  \thm@postskip=\thm@preskip
+}
+\makeatother
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{1}
+\tableofcontents
+}
+\hypertarget{prerequisites}{%
+\chapter{Prerequisites}\label{prerequisites}}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.rust-lang.org/tools/install}{Rust}
+\item
+  \href{https://crates.io/crates/peroxide}{Peroxide}
+\end{itemize}
+
+\hypertarget{quick}{%
+\chapter{Quick Start}\label{quick}}
+
+\hypertarget{cargo.toml}{%
+\section{Cargo.toml}\label{cargo.toml}}
+
+\begin{itemize}
+\item
+  To use \texttt{peroxide}, you should edit \texttt{Cargo.toml}
+\item
+  Current document version is corresponding to \texttt{0.8}
+
+\begin{verbatim}
+peroxide = "0.8"
+\end{verbatim}
+\end{itemize}
+
+\hypertarget{import-all-at-once}{%
+\section{Import all at once}\label{import-all-at-once}}
+
+\begin{itemize}
+\item
+  You can import all functions \& structures at once
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{extern} \KeywordTok{crate}\NormalTok{ peroxide;}
+\KeywordTok{use} \PreprocessorTok{peroxide::}\NormalTok{*;}
+
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \CommentTok{//Some codes...}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{vector}{%
+\chapter{Vector}\label{vector}}
+
+\hypertarget{print-vecf64}{%
+\section{\texorpdfstring{Print \texttt{Vec\textless{}f64\textgreater{}}}{Print Vec\textless{}f64\textgreater{}}}\label{print-vecf64}}
+
+\begin{itemize}
+\tightlist
+\item
+  There are two ways to print vector
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Original way: \texttt{print!("\{:?\}",\ a);}
+  \item
+    Peroxide way: \texttt{a.print();} - \textbf{Round-off to fourth digit}
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{vec!}\OperatorTok{[}\DecValTok{2f64}\NormalTok{.sqrt()}\OperatorTok{]}\NormalTok{;}
+\NormalTok{    a.print(); }\CommentTok{// [1.4142]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{syntactic-sugar-for-vecf64}{%
+\section{\texorpdfstring{Syntactic sugar for \texttt{Vec\textless{}f64\textgreater{}}}{Syntactic sugar for Vec\textless{}f64\textgreater{}}}\label{syntactic-sugar-for-vecf64}}
+
+\begin{itemize}
+\item
+  There is useful macro for \texttt{Vec\textless{}f64\textgreater{}}
+\item
+  For \texttt{R}, there is \texttt{c}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# R}
+\NormalTok{a =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\item
+  For \texttt{Peroxide}, there is \texttt{c!}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{// Rust}
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{from-ranges-to-vector}{%
+\section{From ranges to Vector}\label{from-ranges-to-vector}}
+
+\begin{itemize}
+\item
+  For \texttt{R}, there is \texttt{seq} to declare sequence.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# R}
+\NormalTok{a =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\KeywordTok{print}\NormalTok{(a)}
+\CommentTok{# [1] 1 2 3 4}
+\end{Highlighting}
+\end{Shaded}
+\item
+  For \texttt{peroxide}, there is \texttt{seq} to declare sequence.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = seq(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{1}\NormalTok{);}
+\NormalTok{    a.print();}
+    \CommentTok{// [1, 2, 3, 4]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{vector-operation}{%
+\section{Vector Operation}\label{vector-operation}}
+
+\begin{itemize}
+\tightlist
+\item
+  There are some vector-wise operations
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{add(\&self,\ other:\ Vec\textless{}f64\textgreater{})\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{sub(\&self,\ other:\ Vec\textless{}f64\textgreater{})\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{mul(\&self,\ other:\ Vec\textless{}f64\textgreater{})\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{div(\&self,\ other:\ Vec\textless{}f64\textgreater{})\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{dot(\&self,\ other:\ Vec\textless{}f64\textgreater{})\ -\textgreater{}\ f64}
+  \item
+    \texttt{norm(\&self)\ -\textgreater{}\ f64}
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+    \KeywordTok{let}\NormalTok{ b = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{);}
+
+\NormalTok{    a.add(&b).print();}
+\NormalTok{    a.sub(&b).print();}
+\NormalTok{    a.mul(&b).print();}
+\NormalTok{    a.div(&b).print();}
+\NormalTok{    a.dot(&b).print();}
+\NormalTok{    a.norm().print();}
+
+    \CommentTok{// [5, 5, 5, 5]}
+    \CommentTok{// [-3, -1, 1, 3]}
+    \CommentTok{// [4, 6, 6, 4]}
+    \CommentTok{// [0.25, 0.6667, 1.5, 4]}
+    \CommentTok{// 20}
+    \CommentTok{// 5.477225575051661 // sqrt(30)}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\item
+  And there are some useful operations too.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{pow(\&self,\ usize)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{powf(\&self,\ f64)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \item
+    \texttt{sqrt(\&self)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+
+\NormalTok{    a.pow(}\DecValTok{2}\NormalTok{).print();}
+\NormalTok{    a.powf(}\DecValTok{0.5}\NormalTok{).print();}
+\NormalTok{    a.sqrt().print();}
+    \CommentTok{// [1, 4, 9, 16]}
+    \CommentTok{// [1, 1.4142, 1.7321, 2]}
+    \CommentTok{// [1, 1.4142, 1.7321, 2]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{concatenation}{%
+\section{Concatenation}\label{concatenation}}
+
+There are two concatenation operations.
+
+\begin{itemize}
+\item
+  \texttt{cat(T,\ Vec\textless{}T\textgreater{})\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}
+\item
+  \texttt{concat(Vec\textless{}T\textgreater{},\ Vec\textless{}T\textgreater{})\ -\textgreater{}\ Vec\textless{}T\textgreater{}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\NormalTok{    cat(}\DecValTok{0f64}\NormalTok{, a.clone()).print();}
+    \CommentTok{// [0, 1, 2, 3, 4]}
+
+    \KeywordTok{let}\NormalTok{ b = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{8}\NormalTok{);}
+\NormalTok{    concat(a, b).print();}
+    \CommentTok{// [1, 2, 3, 4, 5, 6, 7, 8]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{matrix}{%
+\chapter{Matrix}\label{matrix}}
+
+\hypertarget{declare-matrix}{%
+\section{Declare matrix}\label{declare-matrix}}
+
+\begin{itemize}
+\tightlist
+\item
+  You can declare matrix by various ways.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    R's way - Default
+  \item
+    MATLAB's way
+  \item
+    Python's way
+  \item
+    Other macro
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{rs-way}{%
+\subsection{R's way}\label{rs-way}}
+
+\begin{itemize}
+\tightlist
+\item
+  Description: Same as R - \texttt{matrix(Vector,\ Row,\ Col,\ Shape)}
+\item
+  Type: \texttt{matrix(Vec\textless{}T\textgreater{},\ usize,\ usize,\ Shape)\ where\ T:\ std::convert::Into\textless{}f64\textgreater{}\ +\ Copy}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{Shape}: \texttt{Enum} for matrix shape - \texttt{Row} \& \texttt{Col}
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    2}
+    \CommentTok{// r[1]     3    4}
+
+    \KeywordTok{let}\NormalTok{ b = matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Col);}
+\NormalTok{    b.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    3}
+    \CommentTok{// r[1]     2    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{matlabs-way}{%
+\subsection{MATLAB's way}\label{matlabs-way}}
+
+\begin{itemize}
+\item
+  Description: Similar to MATLAB (But should use \texttt{\&str})
+\item
+  Type: \texttt{ml\_matrix(\&str)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = ml_matrix(}\StringTok{"1 2; 3 4"}\NormalTok{);}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    2}
+    \CommentTok{// r[1]     3    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{pythons-way}{%
+\subsection{Python's way}\label{pythons-way}}
+
+\begin{itemize}
+\item
+  Description: Declare matrix as vector of vectors.
+\item
+  Type: \texttt{py\_matrix(Vec\textless{}Vec\textless{}T\textgreater{}\textgreater{})\ where\ T:\ std::convert::Into\textless{}f64\textgreater{}\ +\ Copy}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = py_matrix(}\PreprocessorTok{vec!}\OperatorTok{[}\PreprocessorTok{vec!}\OperatorTok{[}\DecValTok{1}\NormalTok{, }\DecValTok{2}\OperatorTok{]}\NormalTok{, }\PreprocessorTok{vec!}\OperatorTok{[}\DecValTok{3}\NormalTok{, }\DecValTok{4}\OperatorTok{]]}\NormalTok{);}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    2}
+    \CommentTok{// r[1]     3    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{other-macro}{%
+\subsection{Other macro}\label{other-macro}}
+
+\begin{itemize}
+\item
+  Description: R-like macro to declare matrix
+\item
+  For \texttt{R},
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# R}
+\NormalTok{a =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{4}\OperatorTok{:}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row)}
+\KeywordTok{print}\NormalTok{(a)}
+\CommentTok{#      [,1] [,2]}
+\CommentTok{# [1,]    1    2}
+\CommentTok{# [2,]    3    4}
+\end{Highlighting}
+\end{Shaded}
+\item
+  For \texttt{Peroxide},
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    2}
+    \CommentTok{// r[1]     3    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{basic-method-for-matrix}{%
+\section{Basic Method for Matrix}\label{basic-method-for-matrix}}
+
+There are some useful methods for \texttt{Matrix}
+
+\begin{itemize}
+\item
+  \texttt{row(\&self,\ index:\ usize)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}} : Extract specific row as \texttt{Vec\textless{}f64\textgreater{}}
+\item
+  \texttt{col(\&self,\ index:\ usize)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}} : Extract specific column as \texttt{Vec\textless{}f64\textgreater{}}
+\item
+  \texttt{diag(\&self)\ -\textgreater{}\ Vec\textless{}f64\textgreater{}}: Extract diagonal components as \texttt{Vec\textless{}f64\textgreater{}}
+\item
+  \texttt{swap(\&self,\ usize,\ usize,\ Shape)\ -\textgreater{}\ Matrix}: Swap two rows or columns
+\item
+  \texttt{subs\_col(\&mut\ self,\ usize,\ Vec\textless{}f64\textgreater{})}: Substitute column with \texttt{Vec\textless{}f64\textgreater{}}
+\item
+  \texttt{subs\_row(\&mut\ self,\ usize,\ Vec\textless{}f64\textgreater{})}: Substitute row with \texttt{Vec\textless{}f64\textgreater{}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = ml_matrix(}\StringTok{"1 2; 3 4"}\NormalTok{);}
+
+\NormalTok{    a.row(}\DecValTok{0}\NormalTok{).print(); }\CommentTok{// [1, 2]}
+\NormalTok{    a.col(}\DecValTok{0}\NormalTok{).print(); }\CommentTok{// [1, 3]}
+\NormalTok{    a.diag().print(); }\CommentTok{// [1, 4]}
+\NormalTok{    a.swap(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, Row).print();}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    3    4}
+    \CommentTok{// r[1]    1    2}
+
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ b = ml_matrix(}\StringTok{"1 2;3 4"}\NormalTok{);}
+\NormalTok{    b.subs_col(}\DecValTok{0}\NormalTok{, }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{));}
+\NormalTok{    b.subs_row(}\DecValTok{1}\NormalTok{, }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{7}\NormalTok{, }\DecValTok{8}\NormalTok{));}
+\NormalTok{    b.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]    5    2}
+    \CommentTok{// r[1]    7    8}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{read-write}{%
+\section{Read \& Write}\label{read-write}}
+
+In peroxide, we can write matrix to csv.
+
+\begin{itemize}
+\item
+  \texttt{write(\&self,\ file\_path:\ \&str)}: Write matrix to csv
+\item
+  \texttt{write\_with\_header(\&self,\ file\_path,\ header:\ Vec\textless{}\&str\textgreater{})}: Write with header
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = ml_matrix(}\StringTok{"1 2;3 4"}\NormalTok{);}
+\NormalTok{    a.write(}\StringTok{"matrix.csv"}\NormalTok{).expect(}\StringTok{"Can't write file"}\NormalTok{);}
+
+    \KeywordTok{let}\NormalTok{ b = ml_matrix(}\StringTok{"1 2; 3 4; 5 6"}\NormalTok{);}
+\NormalTok{    b.write_with_header(}\StringTok{"header.csv"}\NormalTok{, }\PreprocessorTok{vec!}\OperatorTok{[}\StringTok{"odd"}\NormalTok{, }\StringTok{"even"}\OperatorTok{]}\NormalTok{)}
+\NormalTok{        .expect(}\StringTok{"Can't write header file"}\NormalTok{);}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+Also, you can read matrix from csv.
+
+\begin{itemize}
+\item
+  Type: \texttt{read(\&str,\ bool,\ char)\ -\textgreater{}\ Result\textless{}Matrix,\ Box\textless{}Error\textgreater{}\textgreater{}}
+\item
+  Description: \texttt{read(file\_path,\ is\_header,\ delimiter)}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = read(}\StringTok{"matrix.csv"}\NormalTok{, }\ConstantTok{false}\NormalTok{, }\CharTok{','}\NormalTok{)}
+\NormalTok{        .expect(}\StringTok{"Can't read matrix.csv file"}\NormalTok{);}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{// r[0]     1    2}
+    \CommentTok{// r[1]     3    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{concatenation-1}{%
+\section{Concatenation}\label{concatenation-1}}
+
+There are two options to concatenate matrices.
+
+\begin{itemize}
+\item
+  \texttt{cbind}: Concatenate two matrices by column direction.
+\item
+  \texttt{rbind}: Concatenate two matrices by row direction.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = ml_matrix(}\StringTok{"1 2;3 4"}\NormalTok{);}
+    \KeywordTok{let}\NormalTok{ b = ml_matrix(}\StringTok{"5 6;7 8"}\NormalTok{);}
+
+\NormalTok{    cbind(a.clone(), b.clone()).print();}
+    \CommentTok{//      c[0] c[1] c[2] c[3]}
+    \CommentTok{// r[0]    1    2    5    7}
+    \CommentTok{// r[1]    3    4    6    8}
+
+\NormalTok{    rbind(a, b).print();}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    1    2}
+    \CommentTok{// r[1]    3    4}
+    \CommentTok{// r[2]    5    6}
+    \CommentTok{// r[3]    7    8}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{matrix-operations}{%
+\section{Matrix operations}\label{matrix-operations}}
+
+\begin{itemize}
+\item
+  In peroxide, can use basic operations between matrices. I'll show you by examples.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    (a.clone() + }\DecValTok{1}\NormalTok{).print(); }\CommentTok{// -, *, / are also available}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    2    3}
+    \CommentTok{// r[1]    4    5}
+
+    \KeywordTok{let}\NormalTok{ b = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{5}\NormalTok{;}\DecValTok{8}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    (a.clone() + b.clone()).print(); }\CommentTok{// -, *, / are also available}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    6    8}
+    \CommentTok{// r[1]   10   12}
+
+\NormalTok{    (a.clone() % b.clone()).print(); }\CommentTok{// Matrix multiplication}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]   19   22}
+    \CommentTok{// r[1]   43   50}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{extract-modify-components}{%
+\section{Extract \& modify components}\label{extract-modify-components}}
+
+\begin{itemize}
+\item
+  In peroxide, matrix data is saved as linear structure.
+\item
+  But you can use two-dimensional index to extract or modify components.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a}\OperatorTok{[}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)}\OperatorTok{]}\NormalTok{.print(); }\CommentTok{// 1}
+\NormalTok{    a}\OperatorTok{[}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{)}\OperatorTok{]}\NormalTok{ = }\DecValTok{2f64}\NormalTok{; }\CommentTok{// Modify component}
+\NormalTok{    a.print();}
+    \CommentTok{//       c[0] c[1]}
+    \CommentTok{//  r[0]    2    2}
+    \CommentTok{//  r[1]    3    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{conversion-between-vector}{%
+\section{Conversion between vector}\label{conversion-between-vector}}
+
+\hypertarget{vector-to-matrix}{%
+\subsection{Vector to Matrix}\label{vector-to-matrix}}
+
+\begin{itemize}
+\item
+  \texttt{to\_matrix} method allows conversion from vector to column matrix.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\NormalTok{    a.to_matrix().print();}
+    \CommentTok{//      c[0]}
+    \CommentTok{// r[0]    1}
+    \CommentTok{// r[1]    2}
+    \CommentTok{// r[2]    3}
+    \CommentTok{// r[3]    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{matrix-to-vector}{%
+\subsection{Matrix to Vector}\label{matrix-to-vector}}
+
+\begin{itemize}
+\item
+  Just use \texttt{row} or \texttt{col} method (I already showed at Basic method section).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a.row(}\DecValTok{0}\NormalTok{).print(); }\CommentTok{// [1, 2]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{useful-constructor}{%
+\section{Useful constructor}\label{useful-constructor}}
+
+\begin{itemize}
+\item
+  \texttt{zeros(usize,\ usize)}: Construct matrix which elements are all zero
+\item
+  \texttt{eye(usize)}: Identity matrix
+\item
+  \texttt{rand(usize,\ usize)}: Construct random uniform matrix (from 0 to 1)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = zeros(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{);}
+    \PreprocessorTok{assert_eq!}\NormalTok{(a, ml_matrix(}\StringTok{"0 0;0 0"}\NormalTok{));}
+
+    \KeywordTok{let}\NormalTok{ b = eye(}\DecValTok{2}\NormalTok{);}
+    \PreprocessorTok{assert_eq!}\NormalTok{(b, ml_matrix(}\StringTok{"1 0;0 1"}\NormalTok{));}
+
+    \KeywordTok{let}\NormalTok{ c = rand(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{);}
+\NormalTok{    c.print(); }\CommentTok{// Random 2x2 matrix}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{linear}{%
+\chapter{Linear Algebra}\label{linear}}
+
+\hypertarget{transpose}{%
+\section{Transpose}\label{transpose}}
+
+\begin{itemize}
+\item
+  Caution: Transpose does not consume the original value.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a.transpose().print();}
+    \CommentTok{// Or you can use shorter one}
+\NormalTok{    a.t().print();}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    1    3}
+    \CommentTok{// r[1]    2    4}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{lu-decomposition}{%
+\section{LU Decomposition}\label{lu-decomposition}}
+
+\begin{itemize}
+\item
+  Peroxide uses \textbf{complete pivoting} for LU decomposition - Very stable
+\item
+  Since there are lots of causes to generate error, you should use \texttt{Option}
+\item
+  \texttt{lu} returns \texttt{Option\textless{}PQLU\textgreater{}}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{PQLU} has four field - \texttt{p}, \texttt{q}, \texttt{l} , \texttt{u}
+  \item
+    \texttt{p} means row permutations
+  \item
+    \texttt{q} means column permutations
+  \item
+    \texttt{l} means lower triangular matrix
+  \item
+    \texttt{u} menas upper triangular matrix
+  \end{itemize}
+\item
+  The structure of \texttt{PQLU} is as follows:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{#[}\NormalTok{derive}\AttributeTok{(}\BuiltInTok{Debug}\AttributeTok{,} \BuiltInTok{Clone}\AttributeTok{)]}
+\KeywordTok{pub} \KeywordTok{struct}\NormalTok{ PQLU }\OperatorTok{\{}
+    \KeywordTok{pub}\NormalTok{ p: Perms,}
+    \KeywordTok{pub}\NormalTok{ q: Perms,}
+    \KeywordTok{pub}\NormalTok{ l: Matrix,}
+    \KeywordTok{pub}\NormalTok{ u: Matrix,}
+\OperatorTok{\}}
+
+\KeywordTok{pub} \KeywordTok{type}\NormalTok{ Perms = }\DataTypeTok{Vec}\NormalTok{<(}\DataTypeTok{usize}\NormalTok{, }\DataTypeTok{usize}\NormalTok{)>;}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Example of LU decomposition:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{), }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+    \KeywordTok{let}\NormalTok{ pqlu = a.lu().unwrap(); }\CommentTok{// unwrap because of Option}
+    \KeywordTok{let}\NormalTok{ (p,q,l,u) = (pqlu.p, pqlu.q, pqlu.l, pqlu.u);}
+    \PreprocessorTok{assert_eq!}\NormalTok{(p, }\PreprocessorTok{vec!}\OperatorTok{[}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{]}\NormalTok{); }\CommentTok{// swap 0 & 1 (Row)}
+    \PreprocessorTok{assert_eq!}\NormalTok{(q, }\PreprocessorTok{vec!}\OperatorTok{[}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}\OperatorTok{]}\NormalTok{); }\CommentTok{// swap 0 & 1 (Col)}
+    \PreprocessorTok{assert_eq!}\NormalTok{(l, matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0.5}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,Row));}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    1    0}
+    \CommentTok{// r[1]  0.5    1}
+    \PreprocessorTok{assert_eq!}\NormalTok{(u, matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{4}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{0}\NormalTok{,-}\DecValTok{0.5}\NormalTok{),}\DecValTok{2}\NormalTok{,}\DecValTok{2}\NormalTok{,Row));}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]    4    3}
+    \CommentTok{// r[1]    0 -0.5}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{determinant}{%
+\section{Determinant}\label{determinant}}
+
+\begin{itemize}
+\item
+  Peroxide uses LU decomposition to obtain determinant (\(\mathcal{O}(n^3)\))
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+    \PreprocessorTok{assert_eq!}\NormalTok{(a.det(), -}\DecValTok{2f64}\NormalTok{);}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{inverse-matrix}{%
+\section{Inverse matrix}\label{inverse-matrix}}
+
+\begin{itemize}
+\tightlist
+\item
+  Peroxide uses LU decomposition to obtain inverse matrix.
+\item
+  It needs two sub functions - \texttt{inv\_l}, \texttt{inv\_u}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    For inverse of \texttt{L,\ U}, I use block partitioning. For example, for lower triangular matrix :
+    \[\begin{aligned}
+      L &= \begin{pmatrix}
+      L_1 & \mathbf{0} \\
+      L_2 & L_3 
+      \end{pmatrix} \\
+      L^{-1} &= \begin{pmatrix}
+      L_1^{-1} & \mathbf{0} \\
+      -L_3^{-1}L_2 L_1^{-1} & L_3^{-1}
+      \end{pmatrix}
+      \end{aligned}
+      \]
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+\NormalTok{    a.inv().unwrap().print();}
+    \CommentTok{//      c[0] c[1]}
+    \CommentTok{// r[0]   -2    1}
+    \CommentTok{// r[1]  1.5 -0.5}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{moore-penrose-pseudo-inverse}{%
+\section{Moore-Penrose Pseudo Inverse}\label{moore-penrose-pseudo-inverse}}
+
+\begin{itemize}
+\item
+  \(X^\dagger = \left(X^T X\right)^{-1} X\)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{matrix!}\NormalTok{(}\DecValTok{1}\NormalTok{;}\DecValTok{4}\NormalTok{;}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, Row);}
+    \KeywordTok{let}\NormalTok{ pinv_a = a.psudo_inv().unwrap();}
+    \KeywordTok{let}\NormalTok{ inv_a = a.inv().unwrap();}
+
+    \PreprocessorTok{assert_eq!}\NormalTok{(inv_a, pinv_a); }\CommentTok{// Nearly equal (not actually equal)}
+\OperatorTok{\}}
+
+\CommentTok{// PartialEq implements}
+\KeywordTok{impl} \BuiltInTok{PartialEq} \KeywordTok{for}\NormalTok{ Matrix }\OperatorTok{\{}
+    \KeywordTok{fn}\NormalTok{ eq(&}\KeywordTok{self}\NormalTok{, other: &Matrix) -> }\DataTypeTok{bool} \OperatorTok{\{}
+        \KeywordTok{if} \KeywordTok{self}\NormalTok{.shape == other.shape }\OperatorTok{\{}
+            \KeywordTok{self}\NormalTok{.data.clone()}
+\NormalTok{                .into_iter()}
+\NormalTok{                .zip(other.data.clone())}
+\NormalTok{                .all(|(x, y)| nearly_eq(x,y)) && }\KeywordTok{self}\NormalTok{.row == other.row}
+        \OperatorTok{\}} \KeywordTok{else} \OperatorTok{\{}
+            \KeywordTok{self}\NormalTok{.eq(&other.change_shape())}
+        \OperatorTok{\}}
+    \OperatorTok{\}}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\bibliography{book.bib}
+
+
+\end{document}
