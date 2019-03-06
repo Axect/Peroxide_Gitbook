@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>2 Quick Start | Peroxide Guide</title>
+  <title>6 Functional Programming | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="2 Quick Start | Peroxide Guide" />
+  <meta property="og:title" content="6 Functional Programming | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="2 Quick Start | Peroxide Guide" />
+  <meta name="twitter:title" content="6 Functional Programming | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="index.html">
-<link rel="next" href="vector.html">
+<link rel="prev" href="linear.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -198,26 +198,137 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="quick" class="section level1">
-<h1><span class="header-section-number">2</span> Quick Start</h1>
-<div id="cargo.toml" class="section level2">
-<h2><span class="header-section-number">2.1</span> Cargo.toml</h2>
+<div id="functional" class="section level1">
+<h1><span class="header-section-number">6</span> Functional Programming</h1>
+<div id="fp-for-vector" class="section level2">
+<h2><span class="header-section-number">6.1</span> FP for Vector</h2>
 <ul>
-<li>To use <code>peroxide</code>, you should edit <code>Cargo.toml</code></li>
-<li><p>Current document version is corresponding to <code>0.8</code></p>
-<pre class="toml"><code>peroxide = &quot;0.8&quot;</code></pre></li>
+<li><p>There are some functional programming tools for <code>Vec&lt;f64&gt;</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> FPVector <span class="op">{</span>
+    <span class="kw">type</span> Scalar;
+
+    <span class="kw">fn</span> fmap&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; <span class="kw">Self</span>
+    <span class="kw">where</span>
+        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar;
+    <span class="kw">fn</span> reduce&lt;F, T&gt;(&amp;<span class="kw">self</span>, init: T, f: F) -&gt; <span class="kw">Self</span>::Scalar
+    <span class="kw">where</span>
+        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar, <span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar,
+        T: <span class="pp">convert::</span><span class="bu">Into</span>&lt;<span class="kw">Self</span>::Scalar&gt;;
+    <span class="kw">fn</span> zip_with&lt;F&gt;(&amp;<span class="kw">self</span>, f: F, other: &amp;<span class="kw">Self</span>) -&gt; <span class="kw">Self</span>
+    <span class="kw">where</span>
+        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar, <span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar;
+    <span class="kw">fn</span> filter&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; <span class="kw">Self</span>
+    <span class="kw">where</span>
+        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar) -&gt; <span class="dt">bool</span>;
+    <span class="kw">fn</span> take(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="kw">Self</span>;
+    <span class="kw">fn</span> skip(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="kw">Self</span>;
+<span class="op">}</span></code></pre></li>
+</ul>
+<div id="fmap" class="section level3">
+<h3><span class="header-section-number">6.1.1</span> fmap</h3>
+<ul>
+<li><p><code>fmap</code> is syntactic sugar for <code>map</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+
+    <span class="co">// Original rust</span>
+    a.clone()
+        .into_iter()
+        .map(|x| x + <span class="dv">1f64</span>)
+        .<span class="pp">collect::</span>&lt;<span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;&gt;()
+        .print();
+        <span class="co">// [2, 3, 4, 5]</span>
+
+    <span class="co">// fmap in Peroxide</span>
+    a.fmap(|x| x + <span class="dv">1f64</span>).print();
+    <span class="co">// [2, 3, 4, 5]</span>
+<span class="op">}</span></code></pre></li>
 </ul>
 </div>
-<div id="import-all-at-once" class="section level2">
-<h2><span class="header-section-number">2.2</span> Import all at once</h2>
+<div id="reduce" class="section level3">
+<h3><span class="header-section-number">6.1.2</span> reduce</h3>
 <ul>
-<li><p>You can import all functions &amp; structures at once</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
-<span class="kw">use</span> <span class="pp">peroxide::</span>*;
+<li><p><code>reduce</code> is syntactic sugar for <code>fold</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
 
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">//Some codes...</span>
+    <span class="co">// Original rust</span>
+    a.clone()
+        .into_iter()
+        .fold(<span class="dv">0f64</span>, |x, y| x + y)
+        .print(); <span class="co">// 10</span>
+
+    <span class="co">// reduce in Peroxide</span>
+    a.reduce(<span class="dv">0f64</span>, |x, y| x + y).print(); <span class="co">// 10</span>
 <span class="op">}</span></code></pre></li>
+</ul>
+</div>
+<div id="zip_with" class="section level3">
+<h3><span class="header-section-number">6.1.3</span> zip_with</h3>
+<ul>
+<li><p><code>zip_with</code> is composed of <code>zip</code> &amp; <code>map</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>);
+
+    <span class="co">// Original rust</span>
+    a.clone()
+        .into_iter()
+        .zip(&amp;b)
+        .map(|(x, y)| x + *y)
+        .<span class="pp">collect::</span>&lt;<span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;&gt;().print();
+        <span class="co">// [6, 8, 10, 12]</span>
+
+    <span class="co">// zip_with in Peroxide</span>
+    a.zip_with(|x, y| x + y, &amp;b).print();
+    <span class="co">// [6, 8, 10, 12]</span>
+<span class="op">}</span></code></pre></li>
+</ul>
+</div>
+<div id="filter" class="section level3">
+<h3><span class="header-section-number">6.1.4</span> filter</h3>
+<ul>
+<li><p><code>filter</code> is just syntactic sugar for <code>filter</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+    a.filter(|x| x &gt; <span class="dv">2f64</span>).print();
+    <span class="co">// [3, 4]</span>
+<span class="op">}</span></code></pre></li>
+</ul>
+</div>
+<div id="take-skip" class="section level3">
+<h3><span class="header-section-number">6.1.5</span> take &amp; skip</h3>
+<ul>
+<li><p><code>take</code> is syntactic sugar for <code>take</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+    a.take(<span class="dv">2</span>).print();
+    <span class="co">// [1, 2]</span>
+<span class="op">}</span></code></pre></li>
+<li><p><code>skip</code> is syntactic sugar for <code>skip</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+    a.skip(<span class="dv">2</span>).print();
+    <span class="co">// [3, 4]</span>
+<span class="op">}</span></code></pre></li>
+</ul>
+</div>
+</div>
+<div id="fp-for-matrix" class="section level2">
+<h2><span class="header-section-number">6.2</span> FP for Matrix</h2>
+<ul>
+<li><p>Similar to <code>FPVector</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> FP <span class="op">{</span>
+    <span class="kw">fn</span> take(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>, shape: Shape) -&gt; Matrix;
+    <span class="kw">fn</span> skip(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>, shape: Shape) -&gt; Matrix;
+    <span class="kw">fn</span> fmap&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; Matrix <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>) -&gt; <span class="dt">f64</span>;
+    <span class="kw">fn</span> reduce&lt;F, T&gt;(&amp;<span class="kw">self</span>, init: T, f: F) -&gt; <span class="dt">f64</span> 
+        <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>, <span class="dt">f64</span>) -&gt; <span class="dt">f64</span>,
+            T: <span class="pp">convert::</span><span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;;
+    <span class="kw">fn</span> zip_with&lt;F&gt;(&amp;<span class="kw">self</span>, f: F, other: &amp;Matrix) -&gt; Matrix 
+        <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>, <span class="dt">f64</span>) -&gt; <span class="dt">f64</span>;
+<span class="op">}</span></code></pre></li>
+<li><p>Above functions play same roles as <code>FPVector</code></p></li>
 </ul>
 
 </div>
@@ -227,8 +338,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="vector.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -258,7 +369,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-quick_start.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-functional.Rmd",
 "text": "Edit"
 },
 "history": {

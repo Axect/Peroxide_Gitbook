@@ -943,6 +943,196 @@ There are two options to concatenate matrices.
 \end{Shaded}
 \end{itemize}
 
+\hypertarget{functional}{%
+\chapter{Functional Programming}\label{functional}}
+
+\hypertarget{fp-for-vector}{%
+\section{FP for Vector}\label{fp-for-vector}}
+
+\begin{itemize}
+\item
+  There are some functional programming tools for \texttt{Vec\textless{}f64\textgreater{}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{trait}\NormalTok{ FPVector }\OperatorTok{\{}
+    \KeywordTok{type}\NormalTok{ Scalar;}
+
+    \KeywordTok{fn}\NormalTok{ fmap<F>(&}\KeywordTok{self}\NormalTok{, f: F) -> }\KeywordTok{Self}
+    \KeywordTok{where}
+\NormalTok{        F: }\BuiltInTok{Fn}\NormalTok{(}\KeywordTok{Self}\NormalTok{::Scalar) -> }\KeywordTok{Self}\NormalTok{::Scalar;}
+    \KeywordTok{fn}\NormalTok{ reduce<F, T>(&}\KeywordTok{self}\NormalTok{, init: T, f: F) -> }\KeywordTok{Self}\NormalTok{::Scalar}
+    \KeywordTok{where}
+\NormalTok{        F: }\BuiltInTok{Fn}\NormalTok{(}\KeywordTok{Self}\NormalTok{::Scalar, }\KeywordTok{Self}\NormalTok{::Scalar) -> }\KeywordTok{Self}\NormalTok{::Scalar,}
+\NormalTok{        T: }\PreprocessorTok{convert::}\BuiltInTok{Into}\NormalTok{<}\KeywordTok{Self}\NormalTok{::Scalar>;}
+    \KeywordTok{fn}\NormalTok{ zip_with<F>(&}\KeywordTok{self}\NormalTok{, f: F, other: &}\KeywordTok{Self}\NormalTok{) -> }\KeywordTok{Self}
+    \KeywordTok{where}
+\NormalTok{        F: }\BuiltInTok{Fn}\NormalTok{(}\KeywordTok{Self}\NormalTok{::Scalar, }\KeywordTok{Self}\NormalTok{::Scalar) -> }\KeywordTok{Self}\NormalTok{::Scalar;}
+    \KeywordTok{fn}\NormalTok{ filter<F>(&}\KeywordTok{self}\NormalTok{, f: F) -> }\KeywordTok{Self}
+    \KeywordTok{where}
+\NormalTok{        F: }\BuiltInTok{Fn}\NormalTok{(}\KeywordTok{Self}\NormalTok{::Scalar) -> }\DataTypeTok{bool}\NormalTok{;}
+    \KeywordTok{fn}\NormalTok{ take(&}\KeywordTok{self}\NormalTok{, n: }\DataTypeTok{usize}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{;}
+    \KeywordTok{fn}\NormalTok{ skip(&}\KeywordTok{self}\NormalTok{, n: }\DataTypeTok{usize}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{fmap}{%
+\subsection{fmap}\label{fmap}}
+
+\begin{itemize}
+\item
+  \texttt{fmap} is syntactic sugar for \texttt{map}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+
+    \CommentTok{// Original rust}
+\NormalTok{    a.clone()}
+\NormalTok{        .into_iter()}
+\NormalTok{        .map(|x| x + }\DecValTok{1f64}\NormalTok{)}
+\NormalTok{        .}\PreprocessorTok{collect::}\NormalTok{<}\DataTypeTok{Vec}\NormalTok{<}\DataTypeTok{f64}\NormalTok{>>()}
+\NormalTok{        .print();}
+        \CommentTok{// [2, 3, 4, 5]}
+
+    \CommentTok{// fmap in Peroxide}
+\NormalTok{    a.fmap(|x| x + }\DecValTok{1f64}\NormalTok{).print();}
+    \CommentTok{// [2, 3, 4, 5]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{reduce}{%
+\subsection{reduce}\label{reduce}}
+
+\begin{itemize}
+\item
+  \texttt{reduce} is syntactic sugar for \texttt{fold}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+
+    \CommentTok{// Original rust}
+\NormalTok{    a.clone()}
+\NormalTok{        .into_iter()}
+\NormalTok{        .fold(}\DecValTok{0f64}\NormalTok{, |x, y| x + y)}
+\NormalTok{        .print(); }\CommentTok{// 10}
+
+    \CommentTok{// reduce in Peroxide}
+\NormalTok{    a.reduce(}\DecValTok{0f64}\NormalTok{, |x, y| x + y).print(); }\CommentTok{// 10}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{zip_with}{%
+\subsection{zip\_with}\label{zip_with}}
+
+\begin{itemize}
+\item
+  \texttt{zip\_with} is composed of \texttt{zip} \& \texttt{map}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+    \KeywordTok{let}\NormalTok{ b = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{8}\NormalTok{);}
+
+    \CommentTok{// Original rust}
+\NormalTok{    a.clone()}
+\NormalTok{        .into_iter()}
+\NormalTok{        .zip(&b)}
+\NormalTok{        .map(|(x, y)| x + *y)}
+\NormalTok{        .}\PreprocessorTok{collect::}\NormalTok{<}\DataTypeTok{Vec}\NormalTok{<}\DataTypeTok{f64}\NormalTok{>>().print();}
+        \CommentTok{// [6, 8, 10, 12]}
+
+    \CommentTok{// zip_with in Peroxide}
+\NormalTok{    a.zip_with(|x, y| x + y, &b).print();}
+    \CommentTok{// [6, 8, 10, 12]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{filter}{%
+\subsection{filter}\label{filter}}
+
+\begin{itemize}
+\item
+  \texttt{filter} is just syntactic sugar for \texttt{filter}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\NormalTok{    a.filter(|x| x > }\DecValTok{2f64}\NormalTok{).print();}
+    \CommentTok{// [3, 4]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{take-skip}{%
+\subsection{take \& skip}\label{take-skip}}
+
+\begin{itemize}
+\item
+  \texttt{take} is syntactic sugar for \texttt{take}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\NormalTok{    a.take(}\DecValTok{2}\NormalTok{).print();}
+    \CommentTok{// [1, 2]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\item
+  \texttt{skip} is syntactic sugar for \texttt{skip}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{);}
+\NormalTok{    a.skip(}\DecValTok{2}\NormalTok{).print();}
+    \CommentTok{// [3, 4]}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{fp-for-matrix}{%
+\section{FP for Matrix}\label{fp-for-matrix}}
+
+\begin{itemize}
+\item
+  Similar to \texttt{FPVector}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{trait}\NormalTok{ FP }\OperatorTok{\{}
+    \KeywordTok{fn}\NormalTok{ take(&}\KeywordTok{self}\NormalTok{, n: }\DataTypeTok{usize}\NormalTok{, shape: Shape) -> Matrix;}
+    \KeywordTok{fn}\NormalTok{ skip(&}\KeywordTok{self}\NormalTok{, n: }\DataTypeTok{usize}\NormalTok{, shape: Shape) -> Matrix;}
+    \KeywordTok{fn}\NormalTok{ fmap<F>(&}\KeywordTok{self}\NormalTok{, f: F) -> Matrix }\KeywordTok{where}\NormalTok{ F: }\BuiltInTok{Fn}\NormalTok{(}\DataTypeTok{f64}\NormalTok{) -> }\DataTypeTok{f64}\NormalTok{;}
+    \KeywordTok{fn}\NormalTok{ reduce<F, T>(&}\KeywordTok{self}\NormalTok{, init: T, f: F) -> }\DataTypeTok{f64} 
+        \KeywordTok{where}\NormalTok{ F: }\BuiltInTok{Fn}\NormalTok{(}\DataTypeTok{f64}\NormalTok{, }\DataTypeTok{f64}\NormalTok{) -> }\DataTypeTok{f64}\NormalTok{,}
+\NormalTok{            T: }\PreprocessorTok{convert::}\BuiltInTok{Into}\NormalTok{<}\DataTypeTok{f64}\NormalTok{>;}
+    \KeywordTok{fn}\NormalTok{ zip_with<F>(&}\KeywordTok{self}\NormalTok{, f: F, other: &Matrix) -> Matrix }
+        \KeywordTok{where}\NormalTok{ F: }\BuiltInTok{Fn}\NormalTok{(}\DataTypeTok{f64}\NormalTok{, }\DataTypeTok{f64}\NormalTok{) -> }\DataTypeTok{f64}\NormalTok{;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Above functions play same roles as \texttt{FPVector}
+\end{itemize}
+
 \bibliography{book.bib}
 
 

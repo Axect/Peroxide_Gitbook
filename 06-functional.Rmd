@@ -1,0 +1,144 @@
+# Functional Programming {#functional}
+
+## FP for Vector
+
+* There are some functional programming tools for `Vec<f64>`
+
+    ```rust
+    pub trait FPVector {
+        type Scalar;
+
+        fn fmap<F>(&self, f: F) -> Self
+        where
+            F: Fn(Self::Scalar) -> Self::Scalar;
+        fn reduce<F, T>(&self, init: T, f: F) -> Self::Scalar
+        where
+            F: Fn(Self::Scalar, Self::Scalar) -> Self::Scalar,
+            T: convert::Into<Self::Scalar>;
+        fn zip_with<F>(&self, f: F, other: &Self) -> Self
+        where
+            F: Fn(Self::Scalar, Self::Scalar) -> Self::Scalar;
+        fn filter<F>(&self, f: F) -> Self
+        where
+            F: Fn(Self::Scalar) -> bool;
+        fn take(&self, n: usize) -> Self;
+        fn skip(&self, n: usize) -> Self;
+    }
+    ```
+
+### fmap
+
+* `fmap` is syntactic sugar for `map`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+        
+        // Original rust
+        a.clone()
+            .into_iter()
+            .map(|x| x + 1f64)
+            .collect::<Vec<f64>>()
+            .print();
+            // [2, 3, 4, 5]
+        
+        // fmap in Peroxide
+        a.fmap(|x| x + 1f64).print();
+        // [2, 3, 4, 5]
+    }
+    ```
+
+### reduce
+
+* `reduce` is syntactic sugar for `fold`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+
+        // Original rust
+        a.clone()
+            .into_iter()
+            .fold(0f64, |x, y| x + y)
+            .print(); // 10
+
+        // reduce in Peroxide
+        a.reduce(0f64, |x, y| x + y).print(); // 10
+    }
+    ```
+
+### zip_with
+
+* `zip_with` is composed of `zip` & `map`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+        let b = c!(5,6,7,8);
+
+        // Original rust
+        a.clone()
+            .into_iter()
+            .zip(&b)
+            .map(|(x, y)| x + *y)
+            .collect::<Vec<f64>>().print();
+            // [6, 8, 10, 12]
+
+        // zip_with in Peroxide
+        a.zip_with(|x, y| x + y, &b).print();
+        // [6, 8, 10, 12]
+    }
+    ```
+
+### filter
+
+* `filter` is just syntactic sugar for `filter`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+        a.filter(|x| x > 2f64).print();
+        // [3, 4]
+    }
+    ```
+
+### take & skip
+
+* `take` is syntactic sugar for `take`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+        a.take(2).print();
+        // [1, 2]
+    }
+    ```
+
+* `skip` is syntactic sugar for `skip`
+
+    ```rust
+    fn main() {
+        let a = c!(1,2,3,4);
+        a.skip(2).print();
+        // [3, 4]
+    }
+    ```
+
+## FP for Matrix
+
+* Similar to `FPVector`
+
+    ```rust
+    pub trait FP {
+        fn take(&self, n: usize, shape: Shape) -> Matrix;
+        fn skip(&self, n: usize, shape: Shape) -> Matrix;
+        fn fmap<F>(&self, f: F) -> Matrix where F: Fn(f64) -> f64;
+        fn reduce<F, T>(&self, init: T, f: F) -> f64 
+            where F: Fn(f64, f64) -> f64,
+                T: convert::Into<f64>;
+        fn zip_with<F>(&self, f: F, other: &Matrix) -> Matrix 
+            where F: Fn(f64, f64) -> f64;
+    }
+    ```
+
+* Above functions play same roles as `FPVector`
