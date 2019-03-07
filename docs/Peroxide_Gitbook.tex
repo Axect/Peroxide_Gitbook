@@ -1133,6 +1133,237 @@ There are two options to concatenate matrices.
   Above functions play same roles as \texttt{FPVector}
 \end{itemize}
 
+\hypertarget{statistics}{%
+\chapter{Statistics}\label{statistics}}
+
+\hypertarget{statistics-trait}{%
+\section{\texorpdfstring{\texttt{Statistics} trait}{Statistics trait}}\label{statistics-trait}}
+
+\begin{itemize}
+\tightlist
+\item
+  To make generic code, there is \texttt{Statistics} trait
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{mean}: just mean
+  \item
+    \texttt{var} : variance
+  \item
+    \texttt{sd} : standard deviation (R-like notation)
+  \item
+    \texttt{cov} : covariance
+  \item
+    \texttt{cor} : correlation coefficient
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{trait}\NormalTok{ Statistics }\OperatorTok{\{}
+    \KeywordTok{type}\NormalTok{ Array;}
+    \KeywordTok{type}\NormalTok{ Value;}
+
+    \KeywordTok{fn}\NormalTok{ mean(&}\KeywordTok{self}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{::Value;}
+    \KeywordTok{fn}\NormalTok{ var(&}\KeywordTok{self}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{::Value;}
+    \KeywordTok{fn}\NormalTok{ sd(&}\KeywordTok{self}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{::Value;}
+    \KeywordTok{fn}\NormalTok{ cov(&}\KeywordTok{self}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{::Array;}
+    \KeywordTok{fn}\NormalTok{ cor(&}\KeywordTok{self}\NormalTok{) -> }\KeywordTok{Self}\NormalTok{::Array;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{for-vecf64}{%
+\subsection{\texorpdfstring{For \texttt{Vec\textless{}f64\textgreater{}}}{For Vec\textless{}f64\textgreater{}}}\label{for-vecf64}}
+
+\begin{itemize}
+\item
+  Caution: For \texttt{Vec\textless{}f64\textgreater{}}, \texttt{cov} \& \texttt{cor} are unimplemented (those for \texttt{Matrix})
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{);}
+\NormalTok{    a.mean().print(); }\CommentTok{// 3}
+\NormalTok{    a.var().print();  }\CommentTok{// 2.5}
+\NormalTok{    a.sd().print();   }\CommentTok{// 1.5811388300841898}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\item
+  But there are other functions to calculate \texttt{cov} \& \texttt{cor}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ v1 = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{);}
+    \KeywordTok{let}\NormalTok{ v2 = }\PreprocessorTok{c!}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{);}
+
+\NormalTok{    cov(&v1, &v2).print(); }\CommentTok{// -0.9999999999999998}
+\NormalTok{    cor(&v1, &v2).print(); }\CommentTok{// -0.9999999999999993}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{for-matrix}{%
+\subsection{\texorpdfstring{For \texttt{Matrix}}{For Matrix}}\label{for-matrix}}
+
+\begin{itemize}
+\item
+  For \texttt{Matrix}, \texttt{mean,\ var,\ sd} means column operations
+\item
+  \texttt{cov} means covariance matrix \& \texttt{cor} means also correlation coefficient matrix
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ m = matrix(}\PreprocessorTok{c!}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{), }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, Col);}
+
+\NormalTok{    m.mean().print(); }\CommentTok{// [2, 2]}
+\NormalTok{    m.var().print();  }\CommentTok{// [1.0000, 1.0000]}
+\NormalTok{    m.sd().print();   }\CommentTok{// [1.0000, 1.0000]}
+
+\NormalTok{    m.cov().print();}
+    \CommentTok{//         c[0]    c[1]}
+    \CommentTok{// r[0]  1.0000 -1.0000}
+    \CommentTok{// r[1] -1.0000  1.0000}
+
+\NormalTok{    m.cor().print();}
+    \CommentTok{//         c[0]    c[1]}
+    \CommentTok{// r[0]       1 -1.0000}
+    \CommentTok{// r[1] -1.0000       1}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{simple-random-number-generator}{%
+\section{Simple Random Number Generator}\label{simple-random-number-generator}}
+
+\begin{itemize}
+\item
+  Peroxide uses external \href{https://crates.io/crates/rand}{\texttt{rand} crate} to generate random number
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{extern} \KeywordTok{crate}\NormalTok{ rand;}
+\KeywordTok{use} \KeywordTok{self}\NormalTok{::}\PreprocessorTok{rand::prelude::}\NormalTok{*;}
+
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let} \KeywordTok{mut}\NormalTok{ rng = thread_rng();}
+
+    \KeywordTok{let}\NormalTok{ a = rng.gen_range(}\DecValTok{0f64}\NormalTok{, }\DecValTok{1f64}\NormalTok{); }\CommentTok{// Generate random f64 number ranges from 0 to 1}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\item
+  To want more detailed explanation, see \href{https://crates.io/crates/rand}{\texttt{rand} crate}
+\end{itemize}
+
+\hypertarget{probability-distribution}{%
+\section{Probability Distribution}\label{probability-distribution}}
+
+\begin{itemize}
+\tightlist
+\item
+  There are some famous pdf in Peroxide (not checked pdfs will be implemented soon)
+
+  \begin{itemize}
+  \tightlist
+  \item[$\boxtimes$]
+    Bernoulli
+  \item[$\boxtimes$]
+    Beta
+  \item[$\square$]
+    Dirichlet
+  \item[$\boxtimes$]
+    Gamma
+  \item[$\boxtimes$]
+    Normal
+  \item[$\square$]
+    Student's t
+  \item[$\boxtimes$]
+    Uniform
+  \item[$\square$]
+    Wishart
+  \end{itemize}
+\item
+  There are two enums to represent probability distribution
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{OPDist\textless{}T\textgreater{}} : One parameter distribution (Bernoulli)
+  \item
+    \texttt{TPDist\textless{}T\textgreater{}} : Two parameter distribution (Uniform, Normal, Beta, Gamma)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \texttt{T:\ PartialOrd\ +\ SampleUniform\ +\ Copy\ +\ Into\textless{}f64\textgreater{}}
+    \end{itemize}
+  \end{itemize}
+\item
+  There are some traits for pdf
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{RNG} trait - extract sample \& calculate pdf
+  \item
+    \texttt{Statistics} trait - already shown above
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{rng-trait}{%
+\subsection{\texorpdfstring{\texttt{RNG} trait}{RNG trait}}\label{rng-trait}}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{RNG} trait is composed of two fields
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{sample}: Extract samples
+  \item
+    \texttt{pdf} : Calculate pdf value at specific point
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pub} \KeywordTok{trait}\NormalTok{ RNG }\OperatorTok{\{}
+    \CommentTok{/// Extract samples of distributions}
+    \KeywordTok{fn}\NormalTok{ sample(&}\KeywordTok{self}\NormalTok{, n: }\DataTypeTok{usize}\NormalTok{) -> }\DataTypeTok{Vec}\NormalTok{<}\DataTypeTok{f64}\NormalTok{>;}
+
+    \CommentTok{/// Probability Distribution Function}
+    \CommentTok{///}
+    \CommentTok{/// # Type}
+    \CommentTok{/// `f64 -> f64`}
+    \KeywordTok{fn}\NormalTok{ pdf<S: }\BuiltInTok{PartialOrd}\NormalTok{ + SampleUniform + }\BuiltInTok{Copy}\NormalTok{ + }\BuiltInTok{Into}\NormalTok{<}\DataTypeTok{f64}\NormalTok{>>(&}\KeywordTok{self}\NormalTok{, x: S) -> }\DataTypeTok{f64}\NormalTok{;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
+\hypertarget{bernoulli-distribution}{%
+\subsection{Bernoulli Distribution}\label{bernoulli-distribution}}
+
+\hypertarget{uniform-distribution}{%
+\subsection{Uniform Distribution}\label{uniform-distribution}}
+
+\hypertarget{normal-distribution}{%
+\subsection{Normal Distribution}\label{normal-distribution}}
+
+\hypertarget{beta-distribution}{%
+\subsection{Beta Distribution}\label{beta-distribution}}
+
+\hypertarget{gamma-distribution}{%
+\subsection{Gamma Distribution}\label{gamma-distribution}}
+
 \bibliography{book.bib}
 
 

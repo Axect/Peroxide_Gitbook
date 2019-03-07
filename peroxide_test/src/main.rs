@@ -2,15 +2,11 @@ extern crate peroxide;
 use peroxide::*;
 
 fn main() {
-    let a = c!(1,2,3,4);
-    let b = c!(5,6,7,8);
+    let m = matrix(c!(1,2,3,3,2,1), 3, 2, Col);
+    m.mean().print();
+    m.var().print();
+    m.sd().print();
 
-    // Original rust
-    a.clone()
-        .into_iter()
-        .zip(&b)
-        .map(|(x, y)| x + *y)
-        .collect::<Vec<f64>>().print();
-
-    a.zip_with(|x, y| x + y, &b).print();
+    m.cov().print();
+    m.cor().print();
 }

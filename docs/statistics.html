@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>5 Linear Algebra | Peroxide Guide</title>
+  <title>7 Statistics | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="5 Linear Algebra | Peroxide Guide" />
+  <meta property="og:title" content="7 Statistics | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5 Linear Algebra | Peroxide Guide" />
+  <meta name="twitter:title" content="7 Statistics | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="matrix.html">
-<link rel="next" href="functional.html">
+<link rel="prev" href="functional.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -213,129 +213,162 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="linear" class="section level1">
-<h1><span class="header-section-number">5</span> Linear Algebra</h1>
-<div id="transpose" class="section level2">
-<h2><span class="header-section-number">5.1</span> Transpose</h2>
+<div id="statistics" class="section level1">
+<h1><span class="header-section-number">7</span> Statistics</h1>
+<div id="statistics-trait" class="section level2">
+<h2><span class="header-section-number">7.1</span> <code>Statistics</code> trait</h2>
 <ul>
-<li><p>Caution: Transpose does not consume the original value.</p>
+<li>To make generic code, there is <code>Statistics</code> trait
+<ul>
+<li><code>mean</code>: just mean</li>
+<li><code>var</code> : variance</li>
+<li><code>sd</code> : standard deviation (R-like notation)</li>
+<li><code>cov</code> : covariance</li>
+<li><code>cor</code> : correlation coefficient</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> Statistics <span class="op">{</span>
+    <span class="kw">type</span> Array;
+    <span class="kw">type</span> Value;
+
+    <span class="kw">fn</span> mean(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
+    <span class="kw">fn</span> var(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
+    <span class="kw">fn</span> sd(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
+    <span class="kw">fn</span> cov(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
+    <span class="kw">fn</span> cor(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
+<span class="op">}</span></code></pre></li>
+</ul>
+<div id="for-vecf64" class="section level3">
+<h3><span class="header-section-number">7.1.1</span> For <code>Vec&lt;f64&gt;</code></h3>
+<ul>
+<li><p>Caution: For <code>Vec&lt;f64&gt;</code>, <code>cov</code> &amp; <code>cor</code> are unimplemented (those for <code>Matrix</code>)</p>
 <pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a.transpose().print();
-    <span class="co">// Or you can use shorter one</span>
-    a.t().print();
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    1    3</span>
-    <span class="co">// r[1]    2    4</span>
+    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>);
+    a.mean().print(); <span class="co">// 3</span>
+    a.var().print();  <span class="co">// 2.5</span>
+    a.sd().print();   <span class="co">// 1.5811388300841898</span>
+<span class="op">}</span></code></pre></li>
+<li><p>But there are other functions to calculate <code>cov</code> &amp; <code>cor</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> v1 = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>);
+    <span class="kw">let</span> v2 = <span class="pp">c!</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);
+
+    cov(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999998</span>
+    cor(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999993</span>
 <span class="op">}</span></code></pre></li>
 </ul>
 </div>
-<div id="lu-decomposition" class="section level2">
-<h2><span class="header-section-number">5.2</span> LU Decomposition</h2>
+<div id="for-matrix" class="section level3">
+<h3><span class="header-section-number">7.1.2</span> For <code>Matrix</code></h3>
 <ul>
-<li>Peroxide uses <strong>complete pivoting</strong> for LU decomposition - Very stable</li>
-<li>Since there are lots of causes to generate error, you should use <code>Option</code></li>
-<li><code>lu</code> returns <code>Option&lt;PQLU&gt;</code>
+<li>For <code>Matrix</code>, <code>mean, var, sd</code> means column operations</li>
+<li><p><code>cov</code> means covariance matrix &amp; <code>cor</code> means also correlation coefficient matrix</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> m = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">2</span>, Col);
+
+    m.mean().print(); <span class="co">// [2, 2]</span>
+    m.var().print();  <span class="co">// [1.0000, 1.0000]</span>
+    m.sd().print();   <span class="co">// [1.0000, 1.0000]</span>
+
+    m.cov().print();
+    <span class="co">//         c[0]    c[1]</span>
+    <span class="co">// r[0]  1.0000 -1.0000</span>
+    <span class="co">// r[1] -1.0000  1.0000</span>
+
+    m.cor().print();
+    <span class="co">//         c[0]    c[1]</span>
+    <span class="co">// r[0]       1 -1.0000</span>
+    <span class="co">// r[1] -1.0000       1</span>
+<span class="op">}</span></code></pre></li>
+</ul>
+</div>
+</div>
+<div id="simple-random-number-generator" class="section level2">
+<h2><span class="header-section-number">7.2</span> Simple Random Number Generator</h2>
 <ul>
-<li><code>PQLU</code> has four field - <code>p</code>, <code>q</code>, <code>l</code> , <code>u</code></li>
-<li><code>p</code> means row permutations</li>
-<li><code>q</code> means column permutations</li>
-<li><code>l</code> means lower triangular matrix</li>
-<li><code>u</code> menas upper triangular matrix</li>
+<li><p>Peroxide uses external <a href="https://crates.io/crates/rand"><code>rand</code> crate</a> to generate random number</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> rand;
+<span class="kw">use</span> <span class="kw">self</span>::<span class="pp">rand::prelude::</span>*;
+
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> <span class="kw">mut</span> rng = thread_rng();
+
+    <span class="kw">let</span> a = rng.gen_range(<span class="dv">0f64</span>, <span class="dv">1f64</span>); <span class="co">// Generate random f64 number ranges from 0 to 1</span>
+<span class="op">}</span></code></pre></li>
+<li><p>To want more detailed explanation, see <a href="https://crates.io/crates/rand"><code>rand</code> crate</a></p></li>
+</ul>
+</div>
+<div id="probability-distribution" class="section level2">
+<h2><span class="header-section-number">7.3</span> Probability Distribution</h2>
+<ul>
+<li>There are some famous pdf in Peroxide (not checked pdfs will be implemented soon)
+<ul>
+<li><input type="checkbox" disabled="" checked="" />
+Bernoulli</li>
+<li><input type="checkbox" disabled="" checked="" />
+Beta</li>
+<li><input type="checkbox" disabled="" />
+Dirichlet</li>
+<li><input type="checkbox" disabled="" checked="" />
+Gamma</li>
+<li><input type="checkbox" disabled="" checked="" />
+Normal</li>
+<li><input type="checkbox" disabled="" />
+Student’s t</li>
+<li><input type="checkbox" disabled="" checked="" />
+Uniform</li>
+<li><input type="checkbox" disabled="" />
+Wishart</li>
 </ul></li>
-<li><p>The structure of <code>PQLU</code> is as follows:</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">,</span> <span class="bu">Clone</span><span class="at">)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> PQLU <span class="op">{</span>
-    <span class="kw">pub</span> p: Perms,
-    <span class="kw">pub</span> q: Perms,
-    <span class="kw">pub</span> l: Matrix,
-    <span class="kw">pub</span> u: Matrix,
-<span class="op">}</span>
+<li>There are two enums to represent probability distribution
+<ul>
+<li><code>OPDist&lt;T&gt;</code> : One parameter distribution (Bernoulli)</li>
+<li><code>TPDist&lt;T&gt;</code> : Two parameter distribution (Uniform, Normal, Beta, Gamma)
+<ul>
+<li><code>T: PartialOrd + SampleUniform + Copy + Into&lt;f64&gt;</code></li>
+</ul></li>
+</ul></li>
+<li>There are some traits for pdf
+<ul>
+<li><code>RNG</code> trait - extract sample &amp; calculate pdf</li>
+<li><code>Statistics</code> trait - already shown above</li>
+</ul></li>
+</ul>
+<div id="rng-trait" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> <code>RNG</code> trait</h3>
+<ul>
+<li><code>RNG</code> trait is composed of two fields
+<ul>
+<li><code>sample</code>: Extract samples</li>
+<li><code>pdf</code> : Calculate pdf value at specific point</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> RNG <span class="op">{</span>
+    <span class="co">/// Extract samples of distributions</span>
+    <span class="kw">fn</span> sample(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;;
 
-<span class="kw">pub</span> <span class="kw">type</span> Perms = <span class="dt">Vec</span>&lt;(<span class="dt">usize</span>, <span class="dt">usize</span>)&gt;;</code></pre></li>
-<li><p>Example of LU decomposition:</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    <span class="kw">let</span> pqlu = a.lu().unwrap(); <span class="co">// unwrap because of Option</span>
-    <span class="kw">let</span> (p,q,l,u) = (pqlu.p, pqlu.q, pqlu.l, pqlu.u);
-    <span class="pp">assert_eq!</span>(p, <span class="pp">vec!</span><span class="op">[</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="op">]</span>); <span class="co">// swap 0 &amp; 1 (Row)</span>
-    <span class="pp">assert_eq!</span>(q, <span class="pp">vec!</span><span class="op">[</span>(<span class="dv">0</span>,<span class="dv">1</span>)<span class="op">]</span>); <span class="co">// swap 0 &amp; 1 (Col)</span>
-    <span class="pp">assert_eq!</span>(l, matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">0.5</span>,<span class="dv">1</span>),<span class="dv">2</span>,<span class="dv">2</span>,Row));
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    1    0</span>
-    <span class="co">// r[1]  0.5    1</span>
-    <span class="pp">assert_eq!</span>(u, matrix(<span class="pp">c!</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">0</span>,-<span class="dv">0.5</span>),<span class="dv">2</span>,<span class="dv">2</span>,Row));
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    4    3</span>
-    <span class="co">// r[1]    0 -0.5</span>
+    <span class="co">/// Probability Distribution Function</span>
+    <span class="co">///</span>
+    <span class="co">/// # Type</span>
+    <span class="co">/// `f64 -&gt; f64`</span>
+    <span class="kw">fn</span> pdf&lt;S: <span class="bu">PartialOrd</span> + SampleUniform + <span class="bu">Copy</span> + <span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;&gt;(&amp;<span class="kw">self</span>, x: S) -&gt; <span class="dt">f64</span>;
 <span class="op">}</span></code></pre></li>
 </ul>
 </div>
-<div id="determinant" class="section level2">
-<h2><span class="header-section-number">5.3</span> Determinant</h2>
-<ul>
-<li><p>Peroxide uses LU decomposition to obtain determinant (<span class="math inline">\(\mathcal{O}(n^3)\)</span>)</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    <span class="pp">assert_eq!</span>(a.det(), -<span class="dv">2f64</span>);
-<span class="op">}</span></code></pre></li>
-</ul>
+<div id="bernoulli-distribution" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Bernoulli Distribution</h3>
 </div>
-<div id="inverse-matrix" class="section level2">
-<h2><span class="header-section-number">5.4</span> Inverse matrix</h2>
-<ul>
-<li>Peroxide uses LU decomposition to obtain inverse matrix.</li>
-<li>It needs two sub functions - <code>inv_l</code>, <code>inv_u</code>
-<ul>
-<li>For inverse of <code>L, U</code>, I use block partitioning. For example, for lower triangular matrix :
-<span class="math display">\[\begin{aligned}
-  L &amp;= \begin{pmatrix}
-  L_1 &amp; \mathbf{0} \\
-  L_2 &amp; L_3 
-  \end{pmatrix} \\
-  L^{-1} &amp;= \begin{pmatrix}
-  L_1^{-1} &amp; \mathbf{0} \\
-  -L_3^{-1}L_2 L_1^{-1} &amp; L_3^{-1}
-  \end{pmatrix}
-  \end{aligned}
-  \]</span></li>
-</ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a.inv().unwrap().print();
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]   -2    1</span>
-    <span class="co">// r[1]  1.5 -0.5</span>
-<span class="op">}</span></code></pre></li>
-</ul>
+<div id="uniform-distribution" class="section level3">
+<h3><span class="header-section-number">7.3.3</span> Uniform Distribution</h3>
 </div>
-<div id="moore-penrose-pseudo-inverse" class="section level2">
-<h2><span class="header-section-number">5.5</span> Moore-Penrose Pseudo Inverse</h2>
-<ul>
-<li><p><span class="math inline">\(X^\dagger = \left(X^T X\right)^{-1} X\)</span></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    <span class="kw">let</span> pinv_a = a.psudo_inv().unwrap();
-    <span class="kw">let</span> inv_a = a.inv().unwrap();
+<div id="normal-distribution" class="section level3">
+<h3><span class="header-section-number">7.3.4</span> Normal Distribution</h3>
+</div>
+<div id="beta-distribution" class="section level3">
+<h3><span class="header-section-number">7.3.5</span> Beta Distribution</h3>
+</div>
+<div id="gamma-distribution" class="section level3">
+<h3><span class="header-section-number">7.3.6</span> Gamma Distribution</h3>
 
-    <span class="pp">assert_eq!</span>(inv_a, pinv_a); <span class="co">// Nearly equal (not actually equal)</span>
-<span class="op">}</span>
-
-<span class="co">// PartialEq implements</span>
-<span class="kw">impl</span> <span class="bu">PartialEq</span> <span class="kw">for</span> Matrix <span class="op">{</span>
-    <span class="kw">fn</span> eq(&amp;<span class="kw">self</span>, other: &amp;Matrix) -&gt; <span class="dt">bool</span> <span class="op">{</span>
-        <span class="kw">if</span> <span class="kw">self</span>.shape == other.shape <span class="op">{</span>
-            <span class="kw">self</span>.data.clone()
-                .into_iter()
-                .zip(other.data.clone())
-                .all(|(x, y)| nearly_eq(x,y)) &amp;&amp; <span class="kw">self</span>.row == other.row
-        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
-            <span class="kw">self</span>.eq(&amp;other.change_shape())
-        <span class="op">}</span>
-    <span class="op">}</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-
+</div>
 </div>
 </div>
             </section>
@@ -343,8 +376,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="matrix.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="functional.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="functional.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -374,7 +407,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-linear_algebra.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-statistics.Rmd",
 "text": "Edit"
 },
 "history": {
