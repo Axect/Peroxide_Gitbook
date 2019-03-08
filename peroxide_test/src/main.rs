@@ -2,11 +2,10 @@ extern crate peroxide;
 use peroxide::*;
 
 fn main() {
-    let m = matrix(c!(1,2,3,3,2,1), 3, 2, Col);
-    m.mean().print();
-    m.var().print();
-    m.sd().print();
+    let a = Bernoulli(0.1);
+    a.pdf(0).print();
 
-    m.cov().print();
-    m.cor().print();
+    a.mean().print();
+    a.var().print();
+    a.sd().print();
 }

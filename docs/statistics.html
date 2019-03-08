@@ -25,7 +25,7 @@
 <meta name="author" content="Axect">
 
 
-<meta name="date" content="2019-03-07">
+<meta name="date" content="2019-03-08">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -355,9 +355,53 @@ Wishart</li>
 </div>
 <div id="bernoulli-distribution" class="section level3">
 <h3><span class="header-section-number">7.3.2</span> Bernoulli Distribution</h3>
+<ul>
+<li>Definition
+<span class="math display">\[\text{Bern}(x | \mu) = \mu^x (1-\mu)^{1-x}\]</span></li>
+<li>Representative value
+<ul>
+<li>Mean: <span class="math inline">\(\mu\)</span></li>
+<li>Var : <span class="math inline">\(\mu(1 - \mu)\)</span></li>
+</ul></li>
+<li>In peroxide, to generate <span class="math inline">\(\text{Bern}(x | \mu)\)</span>, use simple algorithm
+<ol style="list-style-type: decimal">
+<li>Generate <span class="math inline">\(U \sim \text{Unif}(0, 1)\)</span></li>
+<li>If <span class="math inline">\(U \leq \mu\)</span>, then <span class="math inline">\(X = 1\)</span> else <span class="math inline">\(X = 0\)</span></li>
+</ol></li>
+<li><p>Usage is very simple</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> b = Bernoulli(<span class="dv">0.1</span>); <span class="co">// Bern(x | 0.1)</span>
+    b.sample(<span class="dv">100</span>).print();  <span class="co">// Generate 100 samples</span>
+    b.pdf(<span class="dv">0</span>).print();       <span class="co">// 0.9</span>
+    b.mean().print();       <span class="co">// 0.1</span>
+    b.var().print();        <span class="co">// 0.09 (approximately)</span>
+    b.sd().print();         <span class="co">// 0.3  (approximately)</span>
+<span class="op">}</span></code></pre></li>
+</ul>
 </div>
 <div id="uniform-distribution" class="section level3">
 <h3><span class="header-section-number">7.3.3</span> Uniform Distribution</h3>
+<ul>
+<li>Definition
+<span class="math display">\[\text{Unif}(x | a, b) = \begin{cases}
+   \frac{1}{b - a} &amp; x \in [a,b]\\
+   0 &amp; \text{otherwise}
+  \end{cases}\]</span></li>
+<li>Representative value
+<ul>
+<li>Mean: <span class="math inline">\(\frac{a + b}{2}\)</span></li>
+<li>Var : <span class="math inline">\(\frac{1}{12}(b-a)^2\)</span></li>
+</ul></li>
+<li><p>To generate uniform random number, Peroxide uses <code>rand</code> crate</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> a = Unif(<span class="dv">0</span>, <span class="dv">1</span>);
+    a.sample(<span class="dv">100</span>).print();
+    a.pdf(<span class="dv">0.2</span>).print();
+    a.mean().print();
+    a.var().print();
+    a.sd().print();
+<span class="op">}</span></code></pre></li>
+</ul>
 </div>
 <div id="normal-distribution" class="section level3">
 <h3><span class="header-section-number">7.3.4</span> Normal Distribution</h3>

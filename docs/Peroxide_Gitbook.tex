@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-03-07}
+    \date{2019-03-08}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -1352,8 +1352,84 @@ There are two options to concatenate matrices.
 \hypertarget{bernoulli-distribution}{%
 \subsection{Bernoulli Distribution}\label{bernoulli-distribution}}
 
+\begin{itemize}
+\item
+  Definition
+  \[\text{Bern}(x | \mu) = \mu^x (1-\mu)^{1-x}\]
+\item
+  Representative value
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Mean: \(\mu\)
+  \item
+    Var : \(\mu(1 - \mu)\)
+  \end{itemize}
+\item
+  In peroxide, to generate \(\text{Bern}(x | \mu)\), use simple algorithm
+
+  \begin{enumerate}
+  \def\labelenumi{\arabic{enumi}.}
+  \tightlist
+  \item
+    Generate \(U \sim \text{Unif}(0, 1)\)
+  \item
+    If \(U \leq \mu\), then \(X = 1\) else \(X = 0\)
+  \end{enumerate}
+\item
+  Usage is very simple
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ b = Bernoulli(}\DecValTok{0.1}\NormalTok{); }\CommentTok{// Bern(x | 0.1)}
+\NormalTok{    b.sample(}\DecValTok{100}\NormalTok{).print();  }\CommentTok{// Generate 100 samples}
+\NormalTok{    b.pdf(}\DecValTok{0}\NormalTok{).print();       }\CommentTok{// 0.9}
+\NormalTok{    b.mean().print();       }\CommentTok{// 0.1}
+\NormalTok{    b.var().print();        }\CommentTok{// 0.09 (approximately)}
+\NormalTok{    b.sd().print();         }\CommentTok{// 0.3  (approximately)}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
+
 \hypertarget{uniform-distribution}{%
 \subsection{Uniform Distribution}\label{uniform-distribution}}
+
+\begin{itemize}
+\item
+  Definition
+  \[\text{Unif}(x | a, b) = \begin{cases}
+     \frac{1}{b - a} & x \in [a,b]\\
+     0 & \text{otherwise}
+    \end{cases}\]
+\item
+  Representative value
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Mean: \(\frac{a + b}{2}\)
+  \item
+    Var : \(\frac{1}{12}(b-a)^2\)
+  \end{itemize}
+\item
+  To generate uniform random number, Peroxide uses \texttt{rand} crate
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \KeywordTok{let}\NormalTok{ a = Unif(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{);}
+\NormalTok{    a.sample(}\DecValTok{100}\NormalTok{).print();}
+\NormalTok{    a.pdf(}\DecValTok{0.2}\NormalTok{).print();}
+\NormalTok{    a.mean().print();}
+\NormalTok{    a.var().print();}
+\NormalTok{    a.sd().print();}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
 
 \hypertarget{normal-distribution}{%
 \subsection{Normal Distribution}\label{normal-distribution}}
