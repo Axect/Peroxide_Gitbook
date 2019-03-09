@@ -25,7 +25,7 @@
 <meta name="author" content="Axect">
 
 
-<meta name="date" content="2019-03-08">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -394,7 +394,8 @@ Wishart</li>
 </ul></li>
 <li><p>To generate uniform random number, Peroxide uses <code>rand</code> crate</p>
 <pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = Unif(<span class="dv">0</span>, <span class="dv">1</span>);
+    <span class="co">// Uniform(start, end)</span>
+    <span class="kw">let</span> a = Uniform(<span class="dv">0</span>, <span class="dv">1</span>);
     a.sample(<span class="dv">100</span>).print();
     a.pdf(<span class="dv">0.2</span>).print();
     a.mean().print();
@@ -405,6 +406,33 @@ Wishart</li>
 </div>
 <div id="normal-distribution" class="section level3">
 <h3><span class="header-section-number">7.3.4</span> Normal Distribution</h3>
+<ul>
+<li>Definition
+<span class="math display">\[\mathcal{N}(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp{\left( - \frac{(x - \mu)^2}{2\sigma^2}\right)}\]</span></li>
+<li>Representative value
+<ul>
+<li>Mean: <span class="math inline">\(\mu\)</span></li>
+<li>Var: <span class="math inline">\(\sigma^2\)</span></li>
+</ul></li>
+<li>To generate normal random number, there are two famous algorithms
+<ul>
+<li>Marsaglia-Polar method</li>
+<li>Ziggurat algorithm</li>
+</ul></li>
+<li>In peroxide, main algorithm is Ziggurat - most efficient algorithm to generate random normal samples.
+<ul>
+<li>Code is based on a <a href="https://www.seehuhn.de/pages/ziggurat.html">C implementation</a> by Jochen Voss.</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="co">// Normal(mean, std)</span>
+    <span class="kw">let</span> a = Normal(<span class="dv">0</span>, <span class="dv">1</span>); <span class="co">// Standard normal</span>
+    a.sample(<span class="dv">100</span>).print();
+    a.pdf(<span class="dv">0</span>).print(); <span class="co">// Maximum probability</span>
+    a.mean().print();
+    a.var().print();
+    a.sd().print();
+<span class="op">}</span></code></pre></li>
+</ul>
 </div>
 <div id="beta-distribution" class="section level3">
 <h3><span class="header-section-number">7.3.5</span> Beta Distribution</h3>

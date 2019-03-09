@@ -125,7 +125,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-03-08}
+    \date{2019-03-09}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -1420,7 +1420,8 @@ There are two options to concatenate matrices.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
-    \KeywordTok{let}\NormalTok{ a = Unif(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{);}
+    \CommentTok{// Uniform(start, end)}
+    \KeywordTok{let}\NormalTok{ a = Uniform(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{);}
 \NormalTok{    a.sample(}\DecValTok{100}\NormalTok{).print();}
 \NormalTok{    a.pdf(}\DecValTok{0.2}\NormalTok{).print();}
 \NormalTok{    a.mean().print();}
@@ -1433,6 +1434,55 @@ There are two options to concatenate matrices.
 
 \hypertarget{normal-distribution}{%
 \subsection{Normal Distribution}\label{normal-distribution}}
+
+\begin{itemize}
+\tightlist
+\item
+  Definition
+  \[\mathcal{N}(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp{\left( - \frac{(x - \mu)^2}{2\sigma^2}\right)}\]
+\item
+  Representative value
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Mean: \(\mu\)
+  \item
+    Var: \(\sigma^2\)
+  \end{itemize}
+\item
+  To generate normal random number, there are two famous algorithms
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Marsaglia-Polar method
+  \item
+    Ziggurat algorithm
+  \end{itemize}
+\item
+  In peroxide, main algorithm is Ziggurat - most efficient algorithm to generate random normal samples.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Code is based on a \href{https://www.seehuhn.de/pages/ziggurat.html}{C implementation} by Jochen Voss.
+  \end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{fn}\NormalTok{ main() }\OperatorTok{\{}
+    \CommentTok{// Normal(mean, std)}
+    \KeywordTok{let}\NormalTok{ a = Normal(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{); }\CommentTok{// Standard normal}
+\NormalTok{    a.sample(}\DecValTok{100}\NormalTok{).print();}
+\NormalTok{    a.pdf(}\DecValTok{0}\NormalTok{).print(); }\CommentTok{// Maximum probability}
+\NormalTok{    a.mean().print();}
+\NormalTok{    a.var().print();}
+\NormalTok{    a.sd().print();}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+\end{itemize}
 
 \hypertarget{beta-distribution}{%
 \subsection{Beta Distribution}\label{beta-distribution}}

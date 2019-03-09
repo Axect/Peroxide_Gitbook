@@ -162,7 +162,8 @@
 
     ```rust
     fn main() {
-        let a = Unif(0, 1);
+        // Uniform(start, end)
+        let a = Uniform(0, 1);
         a.sample(100).print();
         a.pdf(0.2).print();
         a.mean().print();
@@ -172,6 +173,28 @@
     ```
 
 ### Normal Distribution
+
+* Definition
+    $$\mathcal{N}(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp{\left( - \frac{(x - \mu)^2}{2\sigma^2}\right)}$$
+* Representative value
+    * Mean: $\mu$
+    * Var: $\sigma^2$
+* To generate normal random number, there are two famous algorithms
+    * Marsaglia-Polar method
+    * Ziggurat algorithm
+* In peroxide, main algorithm is Ziggurat - most efficient algorithm to generate random normal samples.
+    * Code is based on a [C implementation](https://www.seehuhn.de/pages/ziggurat.html) by Jochen Voss.
+    ```rust
+    fn main() {
+        // Normal(mean, std)
+        let a = Normal(0, 1); // Standard normal
+        a.sample(100).print();
+        a.pdf(0).print(); // Maximum probability
+        a.mean().print();
+        a.var().print();
+        a.sd().print();
+    }
+    ```
 
 ### Beta Distribution
 
