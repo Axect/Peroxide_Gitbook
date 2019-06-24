@@ -3,10 +3,10 @@
 ## Cargo.toml
 
 * To use `peroxide`, you should edit `Cargo.toml`
-* Current document version is corresponding to `0.8`
+* Current document version is corresponding to `0.10.0`
 
     ```toml
-    peroxide = "0.8"
+    peroxide = "0.10"
     ```
 
 ## Import all at once

@@ -2,10 +2,10 @@ extern crate peroxide;
 use peroxide::*;
 
 fn main() {
-    let a = Bernoulli(0.1);
-    a.pdf(0).print();
+    let a = c!(1,2,3,4);
+    let m_col = matrix(c!(1,2,3,4), 4, 1, Col);
+    assert_eq!(a.to_matrix(), m_col);
 
-    a.mean().print();
-    a.var().print();
-    a.sd().print();
+    let m_row = matrix(c!(1,2,3,4), 1, 4, Row);
+    assert_eq!(a.transpose(), m_row);
 }

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6 Functional Programming | Peroxide Guide</title>
-  <meta name="description" content="This book is a guide for Peroxide - Rust numerical library">
-  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+  <meta name="description" content="This book is a guide for Peroxide - Rust numerical library" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6 Functional Programming | Peroxide Guide" />
   <meta property="og:type" content="book" />
@@ -22,14 +21,14 @@
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
 
-<meta name="author" content="Axect">
+<meta name="author" content="Axect" />
 
 
-<meta name="date" content="2019-03-09">
+<meta name="date" content="2019-06-24" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 <link rel="prev" href="linear.html">
@@ -141,6 +140,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.3" data-path="vector.html"><a href="vector.html#from-ranges-to-vector"><i class="fa fa-check"></i><b>3.3</b> From ranges to Vector</a></li>
 <li class="chapter" data-level="3.4" data-path="vector.html"><a href="vector.html#vector-operation"><i class="fa fa-check"></i><b>3.4</b> Vector Operation</a></li>
 <li class="chapter" data-level="3.5" data-path="vector.html"><a href="vector.html#concatenation"><i class="fa fa-check"></i><b>3.5</b> Concatenation</a></li>
+<li class="chapter" data-level="3.6" data-path="vector.html"><a href="vector.html#conversion-to-matrix"><i class="fa fa-check"></i><b>3.6</b> Conversion to Matrix</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="matrix.html"><a href="matrix.html"><i class="fa fa-check"></i><b>4</b> Matrix</a><ul>
 <li class="chapter" data-level="4.1" data-path="matrix.html"><a href="matrix.html#declare-matrix"><i class="fa fa-check"></i><b>4.1</b> Declare matrix</a><ul>
@@ -150,14 +150,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1.4" data-path="matrix.html"><a href="matrix.html#other-macro"><i class="fa fa-check"></i><b>4.1.4</b> Other macro</a></li>
 </ul></li>
 <li class="chapter" data-level="4.2" data-path="matrix.html"><a href="matrix.html#basic-method-for-matrix"><i class="fa fa-check"></i><b>4.2</b> Basic Method for Matrix</a></li>
-<li class="chapter" data-level="4.3" data-path="matrix.html"><a href="matrix.html#read-write"><i class="fa fa-check"></i><b>4.3</b> Read &amp; Write</a></li>
+<li class="chapter" data-level="4.3" data-path="matrix.html"><a href="matrix.html#read-write"><i class="fa fa-check"></i><b>4.3</b> Read &amp; Write</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="matrix.html"><a href="matrix.html#csv-legacy"><i class="fa fa-check"></i><b>4.3.1</b> CSV (Legacy)</a></li>
+<li class="chapter" data-level="4.3.2" data-path="matrix.html"><a href="matrix.html#pickle-export-as-python-object"><i class="fa fa-check"></i><b>4.3.2</b> Pickle (Export as python object)</a></li>
+</ul></li>
 <li class="chapter" data-level="4.4" data-path="matrix.html"><a href="matrix.html#concatenation-1"><i class="fa fa-check"></i><b>4.4</b> Concatenation</a></li>
 <li class="chapter" data-level="4.5" data-path="matrix.html"><a href="matrix.html#matrix-operations"><i class="fa fa-check"></i><b>4.5</b> Matrix operations</a></li>
 <li class="chapter" data-level="4.6" data-path="matrix.html"><a href="matrix.html#extract-modify-components"><i class="fa fa-check"></i><b>4.6</b> Extract &amp; modify components</a></li>
-<li class="chapter" data-level="4.7" data-path="matrix.html"><a href="matrix.html#conversion-between-vector"><i class="fa fa-check"></i><b>4.7</b> Conversion between vector</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="matrix.html"><a href="matrix.html#vector-to-matrix"><i class="fa fa-check"></i><b>4.7.1</b> Vector to Matrix</a></li>
-<li class="chapter" data-level="4.7.2" data-path="matrix.html"><a href="matrix.html#matrix-to-vector"><i class="fa fa-check"></i><b>4.7.2</b> Matrix to Vector</a></li>
-</ul></li>
+<li class="chapter" data-level="4.7" data-path="matrix.html"><a href="matrix.html#conversion-to-vector"><i class="fa fa-check"></i><b>4.7</b> Conversion to vector</a></li>
 <li class="chapter" data-level="4.8" data-path="matrix.html"><a href="matrix.html#useful-constructor"><i class="fa fa-check"></i><b>4.8</b> Useful constructor</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="linear.html"><a href="linear.html"><i class="fa fa-check"></i><b>5</b> Linear Algebra</a><ul>
@@ -242,7 +242,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="fmap" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> fmap</h3>
 <ul>
-<li><p><code>fmap</code> is syntactic sugar for <code>map</code></p>
+<li><p><code>fmap</code> is syntactic sugar for <code>map</code></p></li>
+<li><p>But different to original <code>map</code> - Only <code>f64 -&gt; f64</code> allowed.</p>
 <pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
     <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
 

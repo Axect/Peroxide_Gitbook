@@ -29,6 +29,7 @@
 ### fmap
 
 * `fmap` is syntactic sugar for `map`
+* But different to original `map` - Only `f64 -> f64` allowed.
 
     ```rust
     fn main() {

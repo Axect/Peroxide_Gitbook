@@ -1,0 +1,35 @@
+# Automatic Differentiation {#ad}
+
+## Dual number system
+
+* `Dual` is structure for AD
+    * `value(&self) -> f64` : Value
+    * `slope(&self) -> f64` : Slope (value of derivatives)
+    * `extract(&self) -> (f64,f64)` : Extract both
+* Constructor for `Dual`
+    * `Dual::new(T, T)`
+    * `dual(T, T)`
+* Implemented Operations
+    * `Add, Sub, Mul, Div`
+    * `sin, cos, tan`
+    * `asin, acos, atan`
+    * `sinh, cosh, tanh`
+    * `asinh, acosh, atanh`
+    * `sin_cos`
+    * `exp, ln, log, log2, log10`
+    * `powi, powf, sqrt`
+
+    ```rust
+    fn main() {
+        let x = dual(1, 1); // x at x = 1
+        (x.clone() + x.clone()).print(); // dual(2, 2)
+        (x.clone() - x.clone()).print(); // dual(0, 0)
+        (x.clone() * x.clone()).print(); // dual(1, 2)
+        (x.clone() / x.clone()).print(); // dual(1, 0)
+        x.sin().print();
+        x.cos().print();
+        x.exp().print();
+        x.ln().print();
+        x.powi(2).print(); // same as x * x
+    }
+    ```
