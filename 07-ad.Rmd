@@ -9,7 +9,7 @@
 * Constructor for `Dual`
     * `Dual::new(T, T)`
     * `dual(T, T)`
-* Implemented Operations
+* Implemented Operations (`Real` trait is implemented)
     * `Add, Sub, Mul, Div`
     * `sin, cos, tan`
     * `asin, acos, atan`
@@ -31,5 +31,67 @@
         x.exp().print();
         x.ln().print();
         x.powi(2).print(); // same as x * x
+    }
+    ```
+
+    * After ver `0.10.1`, you can use reference operations
+
+    ```rust
+    fn main() {
+        let x = dual(1,1);
+        (&x + &x).print();
+        (&x - &x).print();
+        // and etc.
+    }
+    ```
+
+## Hyper dual number system
+
+* `HyperDual` is structure for 2nd order AD
+    * `value(&self) -> f64`
+    * `slope(&self) -> f64`
+    * `accel(&self) -> f64`
+* There are two constructors
+    * `HyperDual::new(T, T, T)`
+    * `hyper_dual(T, T, T)`
+
+    ```rust
+    fn main() {
+        let x = hyper_dual(1, 1, 0); // x at x = 1
+        (x.clone() + x.clone()).print(); // hyper_dual(2, 2, 0)
+        (x.clone() * x.clone()).print(); // hyper_dual(1, 2, 2)
+        // and etc.
+    }
+    ```
+
+    * Also, after `0.10.1`, you can use reference ops.
+
+    ```rust
+    fn main() {
+        let x = hyper_dual(1,1,0);
+        (&x + &x).print();
+        (&x * &x).print();
+        // and etc.
+    }
+    ```
+
+## `Real` trait
+
+* `Real` is a trait for binding `f64`, `Dual`, `HyperDual`
+* `Real` requires `PowOps, TrigOps, ExpLogOps` & `std::Ops<Self>` & `std::Ops<f64>`
+
+    ```rust
+    fn main() {
+        let x_f64 = 2f64;
+        let x_dual = dual(2,1);
+        let x_hyper = hyper_dual(2, 1, 0);
+
+        f(x_f64).print();
+        f(x_dual).print();
+        f(x_hyper).print();
+    }
+
+    fn f<T: Real>(x: T) -> T {
+        return x.powi(2)
     }
     ```

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7 Statistics | Peroxide Guide</title>
+  <title>8 Automatic Differentiation | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library" />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7 Statistics | Peroxide Guide" />
+  <meta property="og:title" content="8 Automatic Differentiation | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7 Statistics | Peroxide Guide" />
+  <meta name="twitter:title" content="8 Automatic Differentiation | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="functional.html">
-<link rel="next" href="ad.html">
+<link rel="prev" href="statistics.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -218,234 +218,107 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="statistics" class="section level1">
-<h1><span class="header-section-number">7</span> Statistics</h1>
-<div id="statistics-trait" class="section level2">
-<h2><span class="header-section-number">7.1</span> <code>Statistics</code> trait</h2>
+<div id="ad" class="section level1">
+<h1><span class="header-section-number">8</span> Automatic Differentiation</h1>
+<div id="dual-number-system" class="section level2">
+<h2><span class="header-section-number">8.1</span> Dual number system</h2>
 <ul>
-<li>To make generic code, there is <code>Statistics</code> trait
+<li><code>Dual</code> is structure for AD
 <ul>
-<li><code>mean</code>: just mean</li>
-<li><code>var</code> : variance</li>
-<li><code>sd</code> : standard deviation (R-like notation)</li>
-<li><code>cov</code> : covariance</li>
-<li><code>cor</code> : correlation coefficient</li>
-</ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> Statistics <span class="op">{</span>
-    <span class="kw">type</span> Array;
-    <span class="kw">type</span> Value;
-
-    <span class="kw">fn</span> mean(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> var(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> sd(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> cov(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
-    <span class="kw">fn</span> cor(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
-<span class="op">}</span></code></pre></li>
-</ul>
-<div id="for-vecf64" class="section level3">
-<h3><span class="header-section-number">7.1.1</span> For <code>Vec&lt;f64&gt;</code></h3>
-<ul>
-<li><p>Caution: For <code>Vec&lt;f64&gt;</code>, <code>cov</code> &amp; <code>cor</code> are unimplemented (those for <code>Matrix</code>)</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>);
-    a.mean().print(); <span class="co">// 3</span>
-    a.var().print();  <span class="co">// 2.5</span>
-    a.sd().print();   <span class="co">// 1.5811388300841898</span>
-<span class="op">}</span></code></pre></li>
-<li><p>But there are other functions to calculate <code>cov</code> &amp; <code>cor</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> v1 = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>);
-    <span class="kw">let</span> v2 = <span class="pp">c!</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);
-
-    cov(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999998</span>
-    cor(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999993</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="for-matrix" class="section level3">
-<h3><span class="header-section-number">7.1.2</span> For <code>Matrix</code></h3>
-<ul>
-<li><p>For <code>Matrix</code>, <code>mean, var, sd</code> means column operations</p></li>
-<li><p><code>cov</code> means covariance matrix &amp; <code>cor</code> means also correlation coefficient matrix</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> m = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">2</span>, Col);
-
-    m.mean().print(); <span class="co">// [2, 2]</span>
-    m.var().print();  <span class="co">// [1.0000, 1.0000]</span>
-    m.sd().print();   <span class="co">// [1.0000, 1.0000]</span>
-
-    m.cov().print();
-    <span class="co">//         c[0]    c[1]</span>
-    <span class="co">// r[0]  1.0000 -1.0000</span>
-    <span class="co">// r[1] -1.0000  1.0000</span>
-
-    m.cor().print();
-    <span class="co">//         c[0]    c[1]</span>
-    <span class="co">// r[0]       1 -1.0000</span>
-    <span class="co">// r[1] -1.0000       1</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-</div>
-<div id="simple-random-number-generator" class="section level2">
-<h2><span class="header-section-number">7.2</span> Simple Random Number Generator</h2>
-<ul>
-<li><p>Peroxide uses external <a href="https://crates.io/crates/rand"><code>rand</code> crate</a> to generate random number</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> rand;
-<span class="kw">use</span> <span class="kw">self</span>::<span class="pp">rand::prelude::</span>*;
-
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> <span class="kw">mut</span> rng = thread_rng();
-
-    <span class="kw">let</span> a = rng.gen_range(<span class="dv">0f64</span>, <span class="dv">1f64</span>); <span class="co">// Generate random f64 number ranges from 0 to 1</span>
-<span class="op">}</span></code></pre></li>
-<li><p>To want more detailed explanation, see <a href="https://crates.io/crates/rand"><code>rand</code> crate</a></p></li>
-</ul>
-</div>
-<div id="probability-distribution" class="section level2">
-<h2><span class="header-section-number">7.3</span> Probability Distribution</h2>
-<ul>
-<li>There are some famous pdf in Peroxide (not checked pdfs will be implemented soon)
-<ul>
-<li><input type="checkbox" disabled="" checked="" />
-Bernoulli</li>
-<li><input type="checkbox" disabled="" checked="" />
-Beta</li>
-<li><input type="checkbox" disabled="" />
-Dirichlet</li>
-<li><input type="checkbox" disabled="" checked="" />
-Gamma</li>
-<li><input type="checkbox" disabled="" checked="" />
-Normal</li>
-<li><input type="checkbox" disabled="" />
-Student’s t</li>
-<li><input type="checkbox" disabled="" checked="" />
-Uniform</li>
-<li><input type="checkbox" disabled="" />
-Wishart</li>
+<li><code>value(&amp;self) -&gt; f64</code> : Value</li>
+<li><code>slope(&amp;self) -&gt; f64</code> : Slope (value of derivatives)</li>
+<li><code>extract(&amp;self) -&gt; (f64,f64)</code> : Extract both</li>
 </ul></li>
-<li>There are two enums to represent probability distribution
+<li>Constructor for <code>Dual</code>
 <ul>
-<li><code>OPDist&lt;T&gt;</code> : One parameter distribution (Bernoulli)</li>
-<li><code>TPDist&lt;T&gt;</code> : Two parameter distribution (Uniform, Normal, Beta, Gamma)
-<ul>
-<li><code>T: PartialOrd + SampleUniform + Copy + Into&lt;f64&gt;</code></li>
+<li><code>Dual::new(T, T)</code></li>
+<li><code>dual(T, T)</code></li>
 </ul></li>
-</ul></li>
-<li>There are some traits for pdf
+<li>Implemented Operations (<code>Real</code> trait is implemented)
 <ul>
-<li><code>RNG</code> trait - extract sample &amp; calculate pdf</li>
-<li><code>Statistics</code> trait - already shown above</li>
-</ul></li>
-</ul>
-<div id="rng-trait" class="section level3">
-<h3><span class="header-section-number">7.3.1</span> <code>RNG</code> trait</h3>
-<ul>
-<li><code>RNG</code> trait is composed of two fields
-<ul>
-<li><code>sample</code>: Extract samples</li>
-<li><code>pdf</code> : Calculate pdf value at specific point</li>
-</ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> RNG <span class="op">{</span>
-    <span class="co">/// Extract samples of distributions</span>
-    <span class="kw">fn</span> sample(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;;
-
-    <span class="co">/// Probability Distribution Function</span>
-    <span class="co">///</span>
-    <span class="co">/// # Type</span>
-    <span class="co">/// `f64 -&gt; f64`</span>
-    <span class="kw">fn</span> pdf&lt;S: <span class="bu">PartialOrd</span> + SampleUniform + <span class="bu">Copy</span> + <span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;&gt;(&amp;<span class="kw">self</span>, x: S) -&gt; <span class="dt">f64</span>;
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="bernoulli-distribution" class="section level3">
-<h3><span class="header-section-number">7.3.2</span> Bernoulli Distribution</h3>
-<ul>
-<li><p>Definition
-<span class="math display">\[\text{Bern}(x | \mu) = \mu^x (1-\mu)^{1-x}\]</span></p></li>
-<li><p>Representative value</p>
-<ul>
-<li>Mean: <span class="math inline">\(\mu\)</span></li>
-<li>Var : <span class="math inline">\(\mu(1 - \mu)\)</span></li>
-</ul></li>
-<li><p>In peroxide, to generate <span class="math inline">\(\text{Bern}(x | \mu)\)</span>, use simple algorithm</p>
-<ol style="list-style-type: decimal">
-<li>Generate <span class="math inline">\(U \sim \text{Unif}(0, 1)\)</span></li>
-<li>If <span class="math inline">\(U \leq \mu\)</span>, then <span class="math inline">\(X = 1\)</span> else <span class="math inline">\(X = 0\)</span></li>
-</ol></li>
-<li><p>Usage is very simple</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> b = Bernoulli(<span class="dv">0.1</span>); <span class="co">// Bern(x | 0.1)</span>
-    b.sample(<span class="dv">100</span>).print();  <span class="co">// Generate 100 samples</span>
-    b.pdf(<span class="dv">0</span>).print();       <span class="co">// 0.9</span>
-    b.mean().print();       <span class="co">// 0.1</span>
-    b.var().print();        <span class="co">// 0.09 (approximately)</span>
-    b.sd().print();         <span class="co">// 0.3  (approximately)</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="uniform-distribution" class="section level3">
-<h3><span class="header-section-number">7.3.3</span> Uniform Distribution</h3>
-<ul>
-<li><p>Definition
-<span class="math display">\[\text{Unif}(x | a, b) = \begin{cases}
-   \frac{1}{b - a} &amp; x \in [a,b]\\
-   0 &amp; \text{otherwise}
-  \end{cases}\]</span></p></li>
-<li><p>Representative value</p>
-<ul>
-<li>Mean: <span class="math inline">\(\frac{a + b}{2}\)</span></li>
-<li>Var : <span class="math inline">\(\frac{1}{12}(b-a)^2\)</span></li>
-</ul></li>
-<li><p>To generate uniform random number, Peroxide uses <code>rand</code> crate</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">// Uniform(start, end)</span>
-    <span class="kw">let</span> a = Uniform(<span class="dv">0</span>, <span class="dv">1</span>);
-    a.sample(<span class="dv">100</span>).print();
-    a.pdf(<span class="dv">0.2</span>).print();
-    a.mean().print();
-    a.var().print();
-    a.sd().print();
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="normal-distribution" class="section level3">
-<h3><span class="header-section-number">7.3.4</span> Normal Distribution</h3>
-<ul>
-<li>Definition
-<span class="math display">\[\mathcal{N}(x | \mu, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp{\left( - \frac{(x - \mu)^2}{2\sigma^2}\right)}\]</span></li>
-<li>Representative value
-<ul>
-<li>Mean: <span class="math inline">\(\mu\)</span></li>
-<li>Var: <span class="math inline">\(\sigma^2\)</span></li>
-</ul></li>
-<li>To generate normal random number, there are two famous algorithms
-<ul>
-<li>Marsaglia-Polar method</li>
-<li>Ziggurat algorithm</li>
-</ul></li>
-<li>In peroxide, main algorithm is Ziggurat - most efficient algorithm to generate random normal samples.
-<ul>
-<li>Code is based on a <a href="https://www.seehuhn.de/pages/ziggurat.html">C implementation</a> by Jochen Voss.</li>
+<li><code>Add, Sub, Mul, Div</code></li>
+<li><code>sin, cos, tan</code></li>
+<li><code>asin, acos, atan</code></li>
+<li><code>sinh, cosh, tanh</code></li>
+<li><code>asinh, acosh, atanh</code></li>
+<li><code>sin_cos</code></li>
+<li><code>exp, ln, log, log2, log10</code></li>
+<li><code>powi, powf, sqrt</code></li>
 </ul>
 <pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">// Normal(mean, std)</span>
-    <span class="kw">let</span> a = Normal(<span class="dv">0</span>, <span class="dv">1</span>); <span class="co">// Standard normal</span>
-    a.sample(<span class="dv">100</span>).print();
-    a.pdf(<span class="dv">0</span>).print(); <span class="co">// Maximum probability</span>
-    a.mean().print();
-    a.var().print();
-    a.sd().print();
+    <span class="kw">let</span> x = dual(<span class="dv">1</span>, <span class="dv">1</span>); <span class="co">// x at x = 1</span>
+    (x.clone() + x.clone()).print(); <span class="co">// dual(2, 2)</span>
+    (x.clone() - x.clone()).print(); <span class="co">// dual(0, 0)</span>
+    (x.clone() * x.clone()).print(); <span class="co">// dual(1, 2)</span>
+    (x.clone() / x.clone()).print(); <span class="co">// dual(1, 0)</span>
+    x.sin().print();
+    x.cos().print();
+    x.exp().print();
+    x.ln().print();
+    x.powi(<span class="dv">2</span>).print(); <span class="co">// same as x * x</span>
+<span class="op">}</span></code></pre>
+<ul>
+<li>After ver <code>0.10.1</code>, you can use reference operations</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> x = dual(<span class="dv">1</span>,<span class="dv">1</span>);
+    (&amp;x + &amp;x).print();
+    (&amp;x - &amp;x).print();
+    <span class="co">// and etc.</span>
 <span class="op">}</span></code></pre></li>
 </ul>
 </div>
-<div id="beta-distribution" class="section level3">
-<h3><span class="header-section-number">7.3.5</span> Beta Distribution</h3>
+<div id="hyper-dual-number-system" class="section level2">
+<h2><span class="header-section-number">8.2</span> Hyper dual number system</h2>
+<ul>
+<li><code>HyperDual</code> is structure for 2nd order AD
+<ul>
+<li><code>value(&amp;self) -&gt; f64</code></li>
+<li><code>slope(&amp;self) -&gt; f64</code></li>
+<li><code>accel(&amp;self) -&gt; f64</code></li>
+</ul></li>
+<li>There are two constructors
+<ul>
+<li><code>HyperDual::new(T, T, T)</code></li>
+<li><code>hyper_dual(T, T, T)</code></li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>); <span class="co">// x at x = 1</span>
+    (x.clone() + x.clone()).print(); <span class="co">// hyper_dual(2, 2, 0)</span>
+    (x.clone() * x.clone()).print(); <span class="co">// hyper_dual(1, 2, 2)</span>
+    <span class="co">// and etc.</span>
+<span class="op">}</span></code></pre>
+<ul>
+<li>Also, after <code>0.10.1</code>, you can use reference ops.</li>
+</ul>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>);
+    (&amp;x + &amp;x).print();
+    (&amp;x * &amp;x).print();
+    <span class="co">// and etc.</span>
+<span class="op">}</span></code></pre></li>
+</ul>
 </div>
-<div id="gamma-distribution" class="section level3">
-<h3><span class="header-section-number">7.3.6</span> Gamma Distribution</h3>
+<div id="real-trait" class="section level2">
+<h2><span class="header-section-number">8.3</span> <code>Real</code> trait</h2>
+<ul>
+<li><p><code>Real</code> is a trait for binding <code>f64</code>, <code>Dual</code>, <code>HyperDual</code></p></li>
+<li><p><code>Real</code> requires <code>PowOps, TrigOps, ExpLogOps</code> &amp; <code>std::Ops&lt;Self&gt;</code> &amp; <code>std::Ops&lt;f64&gt;</code></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> x_f64 = <span class="dv">2f64</span>;
+    <span class="kw">let</span> x_dual = dual(<span class="dv">2</span>,<span class="dv">1</span>);
+    <span class="kw">let</span> x_hyper = hyper_dual(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>);
 
-</div>
+    f(x_f64).print();
+    f(x_dual).print();
+    f(x_hyper).print();
+<span class="op">}</span>
+
+<span class="kw">fn</span> f&lt;T: Real&gt;(x: T) -&gt; T <span class="op">{</span>
+    <span class="kw">return</span> x.powi(<span class="dv">2</span>)
+<span class="op">}</span></code></pre></li>
+</ul>
+
 </div>
 </div>
             </section>
@@ -453,8 +326,8 @@ Wishart</li>
           </div>
         </div>
       </div>
-<a href="functional.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="ad.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="statistics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -484,7 +357,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-statistics.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/07-ad.Rmd",
 "text": "Edit"
 },
 "history": {
