@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4 Matrix | Peroxide Guide</title>
+  <title>9 Ordinary Differential Equation | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library" />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4 Matrix | Peroxide Guide" />
+  <meta property="og:title" content="9 Ordinary Differential Equation | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4 Matrix | Peroxide Guide" />
+  <meta name="twitter:title" content="9 Ordinary Differential Equation | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="vector.html">
-<link rel="next" href="linear.html">
+<link rel="prev" href="ad.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -229,287 +229,221 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="matrix" class="section level1">
-<h1><span class="header-section-number">4</span> Matrix</h1>
-<div id="declare-matrix" class="section level2">
-<h2><span class="header-section-number">4.1</span> Declare matrix</h2>
+<div id="ode" class="section level1">
+<h1><span class="header-section-number">9</span> Ordinary Differential Equation</h1>
+<div id="introduce-ode-trait-structure" class="section level2">
+<h2><span class="header-section-number">9.1</span> Introduce <code>ODE</code> Trait &amp; Structure</h2>
+<div id="ode-trait" class="section level3">
+<h3><span class="header-section-number">9.1.1</span> <code>ODE</code> Trait</h3>
 <ul>
-<li>You can declare matrix by various ways.
+<li><p><code>ODE</code> structures are divided by two kinds</p>
 <ul>
-<li>R’s way - Default</li>
-<li>MATLAB’s way</li>
-<li>Python’s way</li>
-<li>Other macro</li>
+<li><code>ExplicitODE</code></li>
+<li><code>ImplicitODE</code></li>
+</ul></li>
+<li><p><code>ODE</code> trait is given as</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> ODE <span class="op">{</span>
+    <span class="kw">type</span> Records;
+    <span class="kw">type</span> Vector;
+    <span class="kw">type</span> Param;
+    <span class="kw">type</span> ODEMethod;
+
+    <span class="kw">fn</span> mut_update(&amp;<span class="kw">mut</span> <span class="kw">self</span>);
+    <span class="kw">fn</span> integrate(&amp;<span class="kw">mut</span> <span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Records;
+    <span class="kw">fn</span> set_initial_condition&lt;T: Real&gt;(&amp;<span class="kw">mut</span> <span class="kw">self</span>, init: State&lt;T&gt;) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> set_boundary_condition&lt;T: Real&gt;(
+        &amp;<span class="kw">mut</span> <span class="kw">self</span>,
+        bound1: (State&lt;T&gt;, BoundaryCondition),
+        bound2: (State&lt;T&gt;, BoundaryCondition),
+    ) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> set_step_size(&amp;<span class="kw">mut</span> <span class="kw">self</span>, dt: <span class="dt">f64</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> set_method(&amp;<span class="kw">mut</span> <span class="kw">self</span>, method: <span class="kw">Self</span>::ODEMethod) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> set_stop_condition(&amp;<span class="kw">mut</span> <span class="kw">self</span>, f: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> set_times(&amp;<span class="kw">mut</span> <span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
+    <span class="kw">fn</span> check_enough(&amp;<span class="kw">self</span>) -&gt; <span class="dt">bool</span>;
+<span class="op">}</span></code></pre>
+<ul>
+<li><code>Records</code> : The type to save results of ODE. Usually <code>Matrix</code> is used.</li>
+<li><code>Vector</code> : Vector can be below things.
+<ul>
+<li><code>Vec&lt;f64&gt;</code> : Used for <code>ExplicitODE</code></li>
+<li><code>Vec&lt;Dual&gt;</code> : Used for <code>ImplicitODE</code></li>
+</ul></li>
+<li><code>Param</code> : Also it can be <code>f64</code> or <code>Dual</code></li>
+<li><code>ODEMethod</code> : Method for solving ODE
+<ul>
+<li><code>ExMethod</code> : Explicit method
+<ul>
+<li><code>Euler</code> : Euler first order</li>
+<li><code>RK4</code> : Runge Kutta 4th order</li>
+</ul></li>
+<li><code>ImMethod</code> : Implicit method <strong>(to be implemented)</strong>
+<ul>
+<li><code>BDF</code> : Backward Euler 1st order</li>
+<li><code>GL4</code> : Gauss Legendre 4th order</li>
+</ul></li>
+</ul></li>
 </ul></li>
 </ul>
-<div id="rs-way" class="section level3">
-<h3><span class="header-section-number">4.1.1</span> R’s way</h3>
-<ul>
-<li>Description: Same as R - <code>matrix(Vector, Row, Col, Shape)</code></li>
-<li>Type: <code>matrix(Vec&lt;T&gt;, usize, usize, Shape) where T: std::convert::Into&lt;f64&gt; + Copy</code>
-<ul>
-<li><code>Shape</code>: <code>Enum</code> for matrix shape - <code>Row</code> &amp; <code>Col</code></li>
-</ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    2</span>
-    <span class="co">// r[1]     3    4</span>
-
-    <span class="kw">let</span> b = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">2</span>, <span class="dv">2</span>, Col);
-    b.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    3</span>
-    <span class="co">// r[1]     2    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
 </div>
-<div id="matlabs-way" class="section level3">
-<h3><span class="header-section-number">4.1.2</span> MATLAB’s way</h3>
+<div id="statet-structure" class="section level3">
+<h3><span class="header-section-number">9.1.2</span> <code>State&lt;T&gt;</code> structure</h3>
 <ul>
-<li><p>Description: Similar to MATLAB (But should use <code>&amp;str</code>)</p></li>
-<li><p>Type: <code>ml_matrix(&amp;str)</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2; 3 4&quot;</span>);
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    2</span>
-    <span class="co">// r[1]     3    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="pythons-way" class="section level3">
-<h3><span class="header-section-number">4.1.3</span> Python’s way</h3>
+<li><p>To use <code>ODE</code> trait, you should understand <code>State&lt;T&gt;</code> first.</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">,</span> <span class="bu">Clone</span><span class="at">,</span> <span class="bu">Default</span><span class="at">)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> State&lt;T: Real&gt; <span class="op">{</span>
+    <span class="kw">pub</span> param: T,
+    <span class="kw">pub</span> value: <span class="dt">Vec</span>&lt;T&gt;,
+    <span class="kw">pub</span> deriv: <span class="dt">Vec</span>&lt;T&gt;,
+<span class="op">}</span></code></pre>
 <ul>
-<li><p>Description: Declare matrix as vector of vectors.</p></li>
-<li><p>Type: <code>py_matrix(Vec&lt;Vec&lt;T&gt;&gt;) where T: std::convert::Into&lt;f64&gt; + Copy</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = py_matrix(<span class="pp">vec!</span><span class="op">[</span><span class="pp">vec!</span><span class="op">[</span><span class="dv">1</span>, <span class="dv">2</span><span class="op">]</span>, <span class="pp">vec!</span><span class="op">[</span><span class="dv">3</span>, <span class="dv">4</span><span class="op">]]</span>);
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    2</span>
-    <span class="co">// r[1]     3    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="other-macro" class="section level3">
-<h3><span class="header-section-number">4.1.4</span> Other macro</h3>
-<ul>
-<li><p>Description: R-like macro to declare matrix</p></li>
-<li><p>For <code>R</code>,</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R</span>
-a =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span><span class="op">:</span><span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row)
-<span class="kw">print</span>(a)
-<span class="co">#      [,1] [,2]</span>
-<span class="co"># [1,]    1    2</span>
-<span class="co"># [2,]    3    4</span></code></pre></li>
-<li><p>For <code>Peroxide</code>,</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    2</span>
-    <span class="co">// r[1]     3    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-</div>
-<div id="basic-method-for-matrix" class="section level2">
-<h2><span class="header-section-number">4.2</span> Basic Method for Matrix</h2>
-<p>There are some useful methods for <code>Matrix</code></p>
-<ul>
-<li><p><code>row(&amp;self, index: usize) -&gt; Vec&lt;f64&gt;</code> : Extract specific row as <code>Vec&lt;f64&gt;</code></p></li>
-<li><p><code>col(&amp;self, index: usize) -&gt; Vec&lt;f64&gt;</code> : Extract specific column as <code>Vec&lt;f64&gt;</code></p></li>
-<li><p><code>diag(&amp;self) -&gt; Vec&lt;f64&gt;</code>: Extract diagonal components as <code>Vec&lt;f64&gt;</code></p></li>
-<li><p><code>swap(&amp;self, usize, usize, Shape) -&gt; Matrix</code>: Swap two rows or columns</p></li>
-<li><p><code>subs_col(&amp;mut self, usize, Vec&lt;f64&gt;)</code>: Substitute column with <code>Vec&lt;f64&gt;</code></p></li>
-<li><p><code>subs_row(&amp;mut self, usize, Vec&lt;f64&gt;)</code>: Substitute row with <code>Vec&lt;f64&gt;</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2; 3 4&quot;</span>);
-
-    a.row(<span class="dv">0</span>).print(); <span class="co">// [1, 2]</span>
-    a.col(<span class="dv">0</span>).print(); <span class="co">// [1, 3]</span>
-    a.diag().print(); <span class="co">// [1, 4]</span>
-    a.swap(<span class="dv">0</span>, <span class="dv">1</span>, Row).print();
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    3    4</span>
-    <span class="co">// r[1]    1    2</span>
-
-    <span class="kw">let</span> <span class="kw">mut</span> b = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
-    b.subs_col(<span class="dv">0</span>, <span class="pp">c!</span>(<span class="dv">5</span>, <span class="dv">6</span>));
-    b.subs_row(<span class="dv">1</span>, <span class="pp">c!</span>(<span class="dv">7</span>, <span class="dv">8</span>));
-    b.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]    5    2</span>
-    <span class="co">// r[1]    7    8</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="read-write" class="section level2">
-<h2><span class="header-section-number">4.3</span> Read &amp; Write</h2>
-<p>In peroxide, we can write matrix to <code>csv</code> or <code>pickle</code>.</p>
-<div id="csv-legacy" class="section level3">
-<h3><span class="header-section-number">4.3.1</span> CSV (Legacy)</h3>
-<ul>
-<li><p><code>write(&amp;self, file_path: &amp;str)</code>: Write matrix to csv</p></li>
-<li><p><code>write_with_header(&amp;self, file_path, header: Vec&lt;&amp;str&gt;)</code>: Write with header</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
-    a.write(<span class="st">&quot;matrix.csv&quot;</span>).expect(<span class="st">&quot;Can&#39;t write file&quot;</span>);
-
-    <span class="kw">let</span> b = ml_matrix(<span class="st">&quot;1 2; 3 4; 5 6&quot;</span>);
-    b.write_with_header(<span class="st">&quot;header.csv&quot;</span>, <span class="pp">vec!</span><span class="op">[</span><span class="st">&quot;odd&quot;</span>, <span class="st">&quot;even&quot;</span><span class="op">]</span>)
-        .expect(<span class="st">&quot;Can&#39;t write header file&quot;</span>);
-<span class="op">}</span></code></pre></li>
-</ul>
-<p>Also, you can read matrix from csv.</p>
-<ul>
-<li><p>Type: <code>read(&amp;str, bool, char) -&gt; Result&lt;Matrix, Box&lt;Error&gt;&gt;</code></p></li>
-<li><p>Description: <code>read(file_path, is_header, delimiter)</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = read(<span class="st">&quot;matrix.csv&quot;</span>, <span class="cn">false</span>, <span class="ch">&#39;,&#39;</span>)
-        .expect(<span class="st">&quot;Can&#39;t read matrix.csv file&quot;</span>);
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">// r[0]     1    2</span>
-    <span class="co">// r[1]     3    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="pickle-export-as-python-object" class="section level3">
-<h3><span class="header-section-number">4.3.2</span> Pickle (Export as python object)</h3>
-<ul>
-<li><code>SimpleWriter</code> : Struct to write pickle
-<ul>
-<li>Necessary method
-<ul>
-<li><code>set_path</code> : Set path</li>
-<li><code>insert_matrix</code> or <code>insert_vector</code></li>
-<li><code>write_pickle</code> : Must be at last</li>
-</ul></li>
-<li>Optional method
-<ul>
-<li><code>set_round_level</code> : Set round-off level</li>
-<li><code>insert_header</code> : Insert header</li>
+<li><code>T</code> can be <code>f64</code> or <code>Dual</code></li>
+<li><code>param</code> is parameter for ODE. Usually it is represented by time.</li>
+<li><code>value</code> is value of each node.</li>
+<li><code>deriv</code> is value of derivative of each node.</li>
 </ul></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
-    <span class="kw">let</span> v = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
+<p>For example,</p>
+<p><span class="math display">\[ \frac{dy_n}{dt} = f(t, y_n) \]</span></p>
+<ul>
+<li><span class="math inline">\(t\)</span> is <code>param</code></li>
+<li><span class="math inline">\(y_n\)</span> is <code>value</code></li>
+<li><span class="math inline">\(f(t,y_n)\)</span> is <code>deriv</code></li>
+</ul>
+<p>Methods for <code>State&lt;T&gt;</code> are as follows.</p>
+<ul>
+<li><code>to_f64(&amp;self) -&gt; State&lt;f64&gt;</code></li>
+<li><code>to_dual(&amp;self) -&gt; State&lt;Dual&gt;</code></li>
+<li><code>new(T, Vec&lt;T&gt;, Vec&lt;T&gt;) -&gt; Self</code></li>
+</ul>
+</div>
+<div id="explicitode-struct" class="section level3">
+<h3><span class="header-section-number">9.1.3</span> <code>ExplicitODE</code> struct</h3>
+<p><code>ExplicitODE</code> is given as follow :</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Clone</span><span class="at">)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> ExplicitODE <span class="op">{</span>
+    state: State&lt;<span class="dt">f64</span>&gt;,
+    func: <span class="kw">fn</span>(&amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;),
+    step_size: <span class="dt">f64</span>,
+    method: ExMethod,
+    init_cond: State&lt;<span class="dt">f64</span>&gt;,
+    bound_cond1: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),
+    bound_cond2: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),
+    stop_cond: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>,
+    times: <span class="dt">usize</span>,
+    to_use: HashMap&lt;ToUse, <span class="dt">bool</span>&gt;,
+<span class="op">}</span></code></pre>
+<ul>
+<li><code>state</code> : Current param, value, derivative</li>
+<li><code>func</code> : Function to update <code>state</code></li>
+<li><code>init_cond</code> : Initial condition</li>
+<li><code>bound_cond1</code> : If boundary problem, then first boundary condition</li>
+<li><code>bound_cond2</code> : second boundary condition</li>
+<li><code>stop_cond</code> : Stop condition (stop before <code>times</code>)</li>
+<li><code>times</code> : How many times do you want to update?</li>
+<li><code>to_use</code> : Just check whether information is enough</li>
+</ul>
+</div>
+</div>
+<div id="example" class="section level2">
+<h2><span class="header-section-number">9.2</span> Example</h2>
+<div id="lorenz-butterfly" class="section level3">
+<h3><span class="header-section-number">9.2.1</span> Lorenz Butterfly</h3>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
+<span class="kw">use</span> <span class="pp">peroxide::</span>*;
 
-    <span class="kw">let</span> <span class="kw">mut</span> wrt = <span class="pp">SimpleWriter::</span>new();
-    wrt.set_path(<span class="st">&quot;data/sample.pickle&quot;</span>)
-        .insert_matrix(a)
-        .insert_vector(v)
-        .set_round_level(<span class="dv">4</span>)
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="co">// =========================================</span>
+    <span class="co">//  Declare ODE</span>
+    <span class="co">// =========================================</span>
+    <span class="kw">let</span> <span class="kw">mut</span> ex_test = <span class="pp">ExplicitODE::</span>new(f);
+
+    <span class="kw">let</span> init_state: State&lt;<span class="dt">f64</span>&gt; = <span class="pp">State::</span>new(
+        <span class="dv">0.0</span>,
+        <span class="pp">vec!</span><span class="op">[</span><span class="dv">10.0</span>, <span class="dv">1.0</span>, <span class="dv">1.0</span><span class="op">]</span>,
+        <span class="pp">vec!</span><span class="op">[</span><span class="dv">0.0</span>, <span class="dv">0.0</span>, <span class="dv">0.0</span><span class="op">]</span>,
+    );
+
+    ex_test
+        .set_initial_condition(init_state)
+        .set_method(<span class="pp">ExMethod::</span>Euler)
+        .set_step_size(<span class="dv">0.01f64</span>)
+        .set_times(<span class="dv">10000</span>);
+
+    <span class="kw">let</span> <span class="kw">mut</span> ex_test2 = ex_test.clone();
+    ex_test2.set_method(<span class="pp">ExMethod::</span>RK4);
+
+    <span class="co">// =========================================</span>
+    <span class="co">//  Save results</span>
+    <span class="co">// =========================================</span>
+    <span class="kw">let</span> results = ex_test.integrate();    
+    <span class="kw">let</span> results2 = ex_test2.integrate();
+
+    <span class="co">// =========================================</span>
+    <span class="co">//  Write results to pickle</span>
+    <span class="co">// =========================================</span>
+    <span class="kw">let</span> <span class="kw">mut</span> wt = <span class="pp">SimpleWriter::</span>new();
+
+    wt
+        .set_path(<span class="st">&quot;example_data/lorenz.pickle&quot;</span>)
+        .insert_matrix(results)
+        .insert_matrix(results2)
         .write_pickle();
-<span class="op">}</span></code></pre></li>
-</ul>
+<span class="op">}</span>
+
+<span class="kw">fn</span> f(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span>
+    <span class="kw">let</span> x = &amp;st.value;
+    <span class="kw">let</span> dx = &amp;<span class="kw">mut</span> st.deriv;
+    dx<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = <span class="dv">10f64</span> * (x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span>);
+    dx<span class="op">[</span><span class="dv">1</span><span class="op">]</span> = <span class="dv">28f64</span> * x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span>;
+    dx<span class="op">[</span><span class="dv">2</span><span class="op">]</span> = -<span class="dv">8f64</span>/<span class="dv">3f64</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span> + x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">1</span><span class="op">]</span>;
+<span class="op">}</span></code></pre>
+<p>If plotting pickle data with python, then</p>
+<div class="figure">
+<img src="image/lorenz_euler.png" alt="Lorenz with Euler" />
+<p class="caption">Lorenz with Euler</p>
+</div>
+<div class="figure">
+<img src="image/lorenz_rk4.png" alt="Lorenz with RK4" />
+<p class="caption">Lorenz with RK4</p>
 </div>
 </div>
-<div id="concatenation-1" class="section level2">
-<h2><span class="header-section-number">4.4</span> Concatenation</h2>
-<p>There are two options to concatenate matrices.</p>
-<ul>
-<li><p><code>cbind</code>: Concatenate two matrices by column direction.</p></li>
-<li><p><code>rbind</code>: Concatenate two matrices by row direction.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
-    <span class="kw">let</span> b = ml_matrix(<span class="st">&quot;5 6;7 8&quot;</span>);
+<div id="simple-1d-runge-kutta" class="section level3">
+<h3><span class="header-section-number">9.2.2</span> Simple 1D Runge-Kutta</h3>
+<p><span class="math display">\[\begin{gathered}
+\frac{dy}{dx} = \frac{5x^2 - y}{e^{x+y}} \\
+y(0) = 1
+\end{gathered}\]</span></p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
+<span class="kw">use</span> <span class="pp">peroxide::</span>*;
 
-    cbind(a.clone(), b.clone()).print();
-    <span class="co">//      c[0] c[1] c[2] c[3]</span>
-    <span class="co">// r[0]    1    2    5    7</span>
-    <span class="co">// r[1]    3    4    6    8</span>
+<span class="kw">fn</span> main() <span class="op">{</span>
+    <span class="kw">let</span> init_state = <span class="pp">State::</span>&lt;<span class="dt">f64</span>&gt;::new(<span class="dv">0f64</span>, <span class="pp">c!</span>(<span class="dv">1</span>), <span class="pp">c!</span>(<span class="dv">0</span>));
 
-    rbind(a, b).print();
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    1    2</span>
-    <span class="co">// r[1]    3    4</span>
-    <span class="co">// r[2]    5    6</span>
-    <span class="co">// r[3]    7    8</span>
-<span class="op">}</span></code></pre></li>
-</ul>
+    <span class="kw">let</span> <span class="kw">mut</span> ode_solver = <span class="pp">ExplicitODE::</span>new(test_fn);
+
+    ode_solver
+        .set_method(<span class="pp">ExMethod::</span>RK4)
+        .set_initial_condition(init_state)
+        .set_step_size(<span class="dv">0.01</span>)
+        .set_times(<span class="dv">1000</span>);
+
+    <span class="kw">let</span> result = ode_solver.integrate();
+
+    <span class="kw">let</span> <span class="kw">mut</span> st = <span class="pp">SimpleWriter::</span>new();
+    st.set_path(<span class="st">&quot;example_data/rk4_test.pickle&quot;</span>)
+        .insert_matrix(result)
+        .write_pickle();
+<span class="op">}</span>
+
+<span class="kw">fn</span> test_fn(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span>
+    <span class="kw">let</span> x = st.param;
+    <span class="kw">let</span> y = &amp;st.value;
+    <span class="kw">let</span> dy = &amp;<span class="kw">mut</span> st.deriv;
+    dy<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = (<span class="dv">5f64</span>*x.powi(<span class="dv">2</span>) - y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>) / (x + y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>).exp();
+<span class="op">}</span></code></pre>
+
 </div>
-<div id="matrix-operations" class="section level2">
-<h2><span class="header-section-number">4.5</span> Matrix operations</h2>
-<ul>
-<li><p>In peroxide, can use basic operations between matrices. I’ll show you by examples.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    (a.clone() + <span class="dv">1</span>).print(); <span class="co">// -, *, / are also available</span>
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    2    3</span>
-    <span class="co">// r[1]    4    5</span>
-
-    <span class="kw">let</span> b = <span class="pp">matrix!</span>(<span class="dv">5</span>;<span class="dv">8</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    (a.clone() + b.clone()).print(); <span class="co">// - is also available</span>
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]    6    8</span>
-    <span class="co">// r[1]   10   12</span>
-
-    (a.clone() * b.clone()).print(); <span class="co">// Matrix multiplication</span>
-    <span class="co">//      c[0] c[1]</span>
-    <span class="co">// r[0]   19   22</span>
-    <span class="co">// r[1]   43   50</span>
-<span class="op">}</span></code></pre></li>
-<li><p><code>clone</code> is too annoying - We can use reference operations!</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = ml_matrix(<span class="st">&quot;1 2;3 4&quot;</span>);
-    <span class="kw">let</span> b = ml_matrix(<span class="st">&quot;5 6;7 8&quot;</span>);
-
-    (&amp;a + <span class="dv">1</span>).print();
-    (&amp;a + &amp;b).print();
-    (&amp;a - &amp;b).print();
-    (&amp;a * &amp;b).print();
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="extract-modify-components" class="section level2">
-<h2><span class="header-section-number">4.6</span> Extract &amp; modify components</h2>
-<ul>
-<li><p>In peroxide, matrix data is saved as linear structure.</p></li>
-<li><p>But you can use two-dimensional index to extract or modify components.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> <span class="kw">mut</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a<span class="op">[</span>(<span class="dv">0</span>,<span class="dv">0</span>)<span class="op">]</span>.print(); <span class="co">// 1</span>
-    a<span class="op">[</span>(<span class="dv">0</span>,<span class="dv">0</span>)<span class="op">]</span> = <span class="dv">2f64</span>; <span class="co">// Modify component</span>
-    a.print();
-    <span class="co">//       c[0] c[1]</span>
-    <span class="co">//  r[0]    2    2</span>
-    <span class="co">//  r[1]    3    4</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="conversion-to-vector" class="section level2">
-<h2><span class="header-section-number">4.7</span> Conversion to vector</h2>
-<ul>
-<li><p>Just use <code>row</code> or <code>col</code> method (I already showed at Basic method section).</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">matrix!</span>(<span class="dv">1</span>;<span class="dv">4</span>;<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, Row);
-    a.row(<span class="dv">0</span>).print(); <span class="co">// [1, 2]</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-</div>
-<div id="useful-constructor" class="section level2">
-<h2><span class="header-section-number">4.8</span> Useful constructor</h2>
-<ul>
-<li><p><code>zeros(usize, usize)</code>: Construct matrix which elements are all zero</p></li>
-<li><p><code>eye(usize)</code>: Identity matrix</p></li>
-<li><p><code>rand(usize, usize)</code>: Construct random uniform matrix (from 0 to 1)</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = zeros(<span class="dv">2</span>, <span class="dv">2</span>);
-    <span class="pp">assert_eq!</span>(a, ml_matrix(<span class="st">&quot;0 0;0 0&quot;</span>));
-
-    <span class="kw">let</span> b = eye(<span class="dv">2</span>);
-    <span class="pp">assert_eq!</span>(b, ml_matrix(<span class="st">&quot;1 0;0 1&quot;</span>));
-
-    <span class="kw">let</span> c = rand(<span class="dv">2</span>, <span class="dv">2</span>);
-    c.print(); <span class="co">// Random 2x2 matrix</span>
-<span class="op">}</span></code></pre></li>
-</ul>
-
 </div>
 </div>
             </section>
@@ -517,8 +451,8 @@ a =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">1</s
           </div>
         </div>
       </div>
-<a href="vector.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="linear.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ad.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -548,7 +482,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/03-matrix.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/08-ode.Rmd",
 "text": "Edit"
 },
 "history": {
