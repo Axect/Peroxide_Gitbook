@@ -24,7 +24,7 @@
 <meta name="author" content="Axect" />
 
 
-<meta name="date" content="2019-06-27" />
+<meta name="date" content="2019-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,9 +50,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -62,14 +62,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -78,9 +80,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -208,6 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.2" data-path="ode.html"><a href="ode.html#simple-1d-runge-kutta"><i class="fa fa-check"></i><b>9.2.2</b> Simple 1D Runge-Kutta</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="plot.html"><a href="plot.html"><i class="fa fa-check"></i><b>10</b> Plot</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -256,27 +259,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>exp, ln, log, log2, log10</code></li>
 <li><code>powi, powf, sqrt</code></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> x = dual(<span class="dv">1</span>, <span class="dv">1</span>); <span class="co">// x at x = 1</span>
-    (x.clone() + x.clone()).print(); <span class="co">// dual(2, 2)</span>
-    (x.clone() - x.clone()).print(); <span class="co">// dual(0, 0)</span>
-    (x.clone() * x.clone()).print(); <span class="co">// dual(1, 2)</span>
-    (x.clone() / x.clone()).print(); <span class="co">// dual(1, 0)</span>
-    x.sin().print();
-    x.cos().print();
-    x.exp().print();
-    x.ln().print();
-    x.powi(<span class="dv">2</span>).print(); <span class="co">// same as x * x</span>
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb50-1"><a href="ad.html#cb50-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb50-2"><a href="ad.html#cb50-2"></a>    <span class="kw">let</span> x = dual(<span class="dv">1</span>, <span class="dv">1</span>); <span class="co">// x at x = 1</span></span>
+<span id="cb50-3"><a href="ad.html#cb50-3"></a>    (x.clone() + x.clone()).print(); <span class="co">// dual(2, 2)</span></span>
+<span id="cb50-4"><a href="ad.html#cb50-4"></a>    (x.clone() - x.clone()).print(); <span class="co">// dual(0, 0)</span></span>
+<span id="cb50-5"><a href="ad.html#cb50-5"></a>    (x.clone() * x.clone()).print(); <span class="co">// dual(1, 2)</span></span>
+<span id="cb50-6"><a href="ad.html#cb50-6"></a>    (x.clone() / x.clone()).print(); <span class="co">// dual(1, 0)</span></span>
+<span id="cb50-7"><a href="ad.html#cb50-7"></a>    x.sin().print();</span>
+<span id="cb50-8"><a href="ad.html#cb50-8"></a>    x.cos().print();</span>
+<span id="cb50-9"><a href="ad.html#cb50-9"></a>    x.exp().print();</span>
+<span id="cb50-10"><a href="ad.html#cb50-10"></a>    x.ln().print();</span>
+<span id="cb50-11"><a href="ad.html#cb50-11"></a>    x.powi(<span class="dv">2</span>).print(); <span class="co">// same as x * x</span></span>
+<span id="cb50-12"><a href="ad.html#cb50-12"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li>After ver <code>0.10.1</code>, you can use reference operations</li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> x = dual(<span class="dv">1</span>,<span class="dv">1</span>);
-    (&amp;x + &amp;x).print();
-    (&amp;x - &amp;x).print();
-    <span class="co">// and etc.</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb51-1"><a href="ad.html#cb51-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb51-2"><a href="ad.html#cb51-2"></a>    <span class="kw">let</span> x = dual(<span class="dv">1</span>,<span class="dv">1</span>);</span>
+<span id="cb51-3"><a href="ad.html#cb51-3"></a>    (&amp;x + &amp;x).print();</span>
+<span id="cb51-4"><a href="ad.html#cb51-4"></a>    (&amp;x - &amp;x).print();</span>
+<span id="cb51-5"><a href="ad.html#cb51-5"></a>    <span class="co">// and etc.</span></span>
+<span id="cb51-6"><a href="ad.html#cb51-6"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="hyper-dual-number-system" class="section level2">
@@ -293,21 +296,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>HyperDual::new(T, T, T)</code></li>
 <li><code>hyper_dual(T, T, T)</code></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>); <span class="co">// x at x = 1</span>
-    (x.clone() + x.clone()).print(); <span class="co">// hyper_dual(2, 2, 0)</span>
-    (x.clone() * x.clone()).print(); <span class="co">// hyper_dual(1, 2, 2)</span>
-    <span class="co">// and etc.</span>
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb52-1"><a href="ad.html#cb52-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb52-2"><a href="ad.html#cb52-2"></a>    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>); <span class="co">// x at x = 1</span></span>
+<span id="cb52-3"><a href="ad.html#cb52-3"></a>    (x.clone() + x.clone()).print(); <span class="co">// hyper_dual(2, 2, 0)</span></span>
+<span id="cb52-4"><a href="ad.html#cb52-4"></a>    (x.clone() * x.clone()).print(); <span class="co">// hyper_dual(1, 2, 2)</span></span>
+<span id="cb52-5"><a href="ad.html#cb52-5"></a>    <span class="co">// and etc.</span></span>
+<span id="cb52-6"><a href="ad.html#cb52-6"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li>Also, after <code>0.10.1</code>, you can use reference ops.</li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>);
-    (&amp;x + &amp;x).print();
-    (&amp;x * &amp;x).print();
-    <span class="co">// and etc.</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb53-1"><a href="ad.html#cb53-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb53-2"><a href="ad.html#cb53-2"></a>    <span class="kw">let</span> x = hyper_dual(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>);</span>
+<span id="cb53-3"><a href="ad.html#cb53-3"></a>    (&amp;x + &amp;x).print();</span>
+<span id="cb53-4"><a href="ad.html#cb53-4"></a>    (&amp;x * &amp;x).print();</span>
+<span id="cb53-5"><a href="ad.html#cb53-5"></a>    <span class="co">// and etc.</span></span>
+<span id="cb53-6"><a href="ad.html#cb53-6"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="real-trait" class="section level2">
@@ -315,19 +318,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p><code>Real</code> is a trait for binding <code>f64</code>, <code>Dual</code>, <code>HyperDual</code></p></li>
 <li><p><code>Real</code> requires <code>PowOps, TrigOps, ExpLogOps</code> &amp; <code>std::Ops&lt;Self&gt;</code> &amp; <code>std::Ops&lt;f64&gt;</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> x_f64 = <span class="dv">2f64</span>;
-    <span class="kw">let</span> x_dual = dual(<span class="dv">2</span>,<span class="dv">1</span>);
-    <span class="kw">let</span> x_hyper = hyper_dual(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>);
-
-    f(x_f64).print();
-    f(x_dual).print();
-    f(x_hyper).print();
-<span class="op">}</span>
-
-<span class="kw">fn</span> f&lt;T: Real&gt;(x: T) -&gt; T <span class="op">{</span>
-    <span class="kw">return</span> x.powi(<span class="dv">2</span>)
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb54-1"><a href="ad.html#cb54-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb54-2"><a href="ad.html#cb54-2"></a>    <span class="kw">let</span> x_f64 = <span class="dv">2f64</span>;</span>
+<span id="cb54-3"><a href="ad.html#cb54-3"></a>    <span class="kw">let</span> x_dual = dual(<span class="dv">2</span>,<span class="dv">1</span>);</span>
+<span id="cb54-4"><a href="ad.html#cb54-4"></a>    <span class="kw">let</span> x_hyper = hyper_dual(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">0</span>);</span>
+<span id="cb54-5"><a href="ad.html#cb54-5"></a></span>
+<span id="cb54-6"><a href="ad.html#cb54-6"></a>    f(x_f64).print();</span>
+<span id="cb54-7"><a href="ad.html#cb54-7"></a>    f(x_dual).print();</span>
+<span id="cb54-8"><a href="ad.html#cb54-8"></a>    f(x_hyper).print();</span>
+<span id="cb54-9"><a href="ad.html#cb54-9"></a><span class="op">}</span></span>
+<span id="cb54-10"><a href="ad.html#cb54-10"></a></span>
+<span id="cb54-11"><a href="ad.html#cb54-11"></a><span class="kw">fn</span> f&lt;T: Real&gt;(x: T) -&gt; T <span class="op">{</span></span>
+<span id="cb54-12"><a href="ad.html#cb54-12"></a>    <span class="kw">return</span> x.powi(<span class="dv">2</span>)</span>
+<span id="cb54-13"><a href="ad.html#cb54-13"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 
 </div>

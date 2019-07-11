@@ -24,7 +24,7 @@
 <meta name="author" content="Axect" />
 
 
-<meta name="date" content="2019-06-27" />
+<meta name="date" content="2019-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="ad.html">
-<link rel="next" href="references.html">
+<link rel="next" href="plot.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -50,9 +50,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -62,14 +62,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -78,9 +80,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -208,6 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.2" data-path="ode.html"><a href="ode.html#simple-1d-runge-kutta"><i class="fa fa-check"></i><b>9.2.2</b> Simple 1D Runge-Kutta</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="plot.html"><a href="plot.html"><i class="fa fa-check"></i><b>10</b> Plot</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -242,26 +245,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>ImplicitODE</code></li>
 </ul></li>
 <li><p><code>ODE</code> trait is given as</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> ODE <span class="op">{</span>
-    <span class="kw">type</span> Records;
-    <span class="kw">type</span> Vector;
-    <span class="kw">type</span> Param;
-    <span class="kw">type</span> ODEMethod;
-
-    <span class="kw">fn</span> mut_update(&amp;<span class="kw">mut</span> <span class="kw">self</span>);
-    <span class="kw">fn</span> integrate(&amp;<span class="kw">mut</span> <span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Records;
-    <span class="kw">fn</span> set_initial_condition&lt;T: Real&gt;(&amp;<span class="kw">mut</span> <span class="kw">self</span>, init: State&lt;T&gt;) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> set_boundary_condition&lt;T: Real&gt;(
-        &amp;<span class="kw">mut</span> <span class="kw">self</span>,
-        bound1: (State&lt;T&gt;, BoundaryCondition),
-        bound2: (State&lt;T&gt;, BoundaryCondition),
-    ) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> set_step_size(&amp;<span class="kw">mut</span> <span class="kw">self</span>, dt: <span class="dt">f64</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> set_method(&amp;<span class="kw">mut</span> <span class="kw">self</span>, method: <span class="kw">Self</span>::ODEMethod) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> set_stop_condition(&amp;<span class="kw">mut</span> <span class="kw">self</span>, f: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> set_times(&amp;<span class="kw">mut</span> <span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;
-    <span class="kw">fn</span> check_enough(&amp;<span class="kw">self</span>) -&gt; <span class="dt">bool</span>;
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb55-1"><a href="ode.html#cb55-1"></a><span class="kw">pub</span> <span class="kw">trait</span> ODE <span class="op">{</span></span>
+<span id="cb55-2"><a href="ode.html#cb55-2"></a>    <span class="kw">type</span> Records;</span>
+<span id="cb55-3"><a href="ode.html#cb55-3"></a>    <span class="kw">type</span> Vector;</span>
+<span id="cb55-4"><a href="ode.html#cb55-4"></a>    <span class="kw">type</span> Param;</span>
+<span id="cb55-5"><a href="ode.html#cb55-5"></a>    <span class="kw">type</span> ODEMethod;</span>
+<span id="cb55-6"><a href="ode.html#cb55-6"></a></span>
+<span id="cb55-7"><a href="ode.html#cb55-7"></a>    <span class="kw">fn</span> mut_update(&amp;<span class="kw">mut</span> <span class="kw">self</span>);</span>
+<span id="cb55-8"><a href="ode.html#cb55-8"></a>    <span class="kw">fn</span> integrate(&amp;<span class="kw">mut</span> <span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Records;</span>
+<span id="cb55-9"><a href="ode.html#cb55-9"></a>    <span class="kw">fn</span> set_initial_condition&lt;T: Real&gt;(&amp;<span class="kw">mut</span> <span class="kw">self</span>, init: State&lt;T&gt;) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-10"><a href="ode.html#cb55-10"></a>    <span class="kw">fn</span> set_boundary_condition&lt;T: Real&gt;(</span>
+<span id="cb55-11"><a href="ode.html#cb55-11"></a>        &amp;<span class="kw">mut</span> <span class="kw">self</span>,</span>
+<span id="cb55-12"><a href="ode.html#cb55-12"></a>        bound1: (State&lt;T&gt;, BoundaryCondition),</span>
+<span id="cb55-13"><a href="ode.html#cb55-13"></a>        bound2: (State&lt;T&gt;, BoundaryCondition),</span>
+<span id="cb55-14"><a href="ode.html#cb55-14"></a>    ) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-15"><a href="ode.html#cb55-15"></a>    <span class="kw">fn</span> set_step_size(&amp;<span class="kw">mut</span> <span class="kw">self</span>, dt: <span class="dt">f64</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-16"><a href="ode.html#cb55-16"></a>    <span class="kw">fn</span> set_method(&amp;<span class="kw">mut</span> <span class="kw">self</span>, method: <span class="kw">Self</span>::ODEMethod) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-17"><a href="ode.html#cb55-17"></a>    <span class="kw">fn</span> set_stop_condition(&amp;<span class="kw">mut</span> <span class="kw">self</span>, f: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-18"><a href="ode.html#cb55-18"></a>    <span class="kw">fn</span> set_times(&amp;<span class="kw">mut</span> <span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; &amp;<span class="kw">mut</span> <span class="kw">Self</span>;</span>
+<span id="cb55-19"><a href="ode.html#cb55-19"></a>    <span class="kw">fn</span> check_enough(&amp;<span class="kw">self</span>) -&gt; <span class="dt">bool</span>;</span>
+<span id="cb55-20"><a href="ode.html#cb55-20"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li><code>Records</code> : The type to save results of ODE. Usually <code>Matrix</code> is used.</li>
 <li><code>Vector</code> : Vector can be below things.
@@ -290,12 +293,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">9.1.2</span> <code>State&lt;T&gt;</code> structure</h3>
 <ul>
 <li><p>To use <code>ODE</code> trait, you should understand <code>State&lt;T&gt;</code> first.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">,</span> <span class="bu">Clone</span><span class="at">,</span> <span class="bu">Default</span><span class="at">)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> State&lt;T: Real&gt; <span class="op">{</span>
-    <span class="kw">pub</span> param: T,
-    <span class="kw">pub</span> value: <span class="dt">Vec</span>&lt;T&gt;,
-    <span class="kw">pub</span> deriv: <span class="dt">Vec</span>&lt;T&gt;,
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb56-1"><a href="ode.html#cb56-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="at">,</span> <span class="bu">Clone</span><span class="at">,</span> <span class="bu">Default</span><span class="at">)]</span></span>
+<span id="cb56-2"><a href="ode.html#cb56-2"></a><span class="kw">pub</span> <span class="kw">struct</span> State&lt;T: Real&gt; <span class="op">{</span></span>
+<span id="cb56-3"><a href="ode.html#cb56-3"></a>    <span class="kw">pub</span> param: T,</span>
+<span id="cb56-4"><a href="ode.html#cb56-4"></a>    <span class="kw">pub</span> value: <span class="dt">Vec</span>&lt;T&gt;,</span>
+<span id="cb56-5"><a href="ode.html#cb56-5"></a>    <span class="kw">pub</span> deriv: <span class="dt">Vec</span>&lt;T&gt;,</span>
+<span id="cb56-6"><a href="ode.html#cb56-6"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li><code>T</code> can be <code>f64</code> or <code>Dual</code></li>
 <li><code>param</code> is parameter for ODE. Usually it is represented by time.</li>
@@ -320,19 +323,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="explicitode-struct" class="section level3">
 <h3><span class="header-section-number">9.1.3</span> <code>ExplicitODE</code> struct</h3>
 <p><code>ExplicitODE</code> is given as follow :</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Clone</span><span class="at">)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> ExplicitODE <span class="op">{</span>
-    state: State&lt;<span class="dt">f64</span>&gt;,
-    func: <span class="kw">fn</span>(&amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;),
-    step_size: <span class="dt">f64</span>,
-    method: ExMethod,
-    init_cond: State&lt;<span class="dt">f64</span>&gt;,
-    bound_cond1: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),
-    bound_cond2: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),
-    stop_cond: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>,
-    times: <span class="dt">usize</span>,
-    to_use: HashMap&lt;ToUse, <span class="dt">bool</span>&gt;,
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb57-1"><a href="ode.html#cb57-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Clone</span><span class="at">)]</span></span>
+<span id="cb57-2"><a href="ode.html#cb57-2"></a><span class="kw">pub</span> <span class="kw">struct</span> ExplicitODE <span class="op">{</span></span>
+<span id="cb57-3"><a href="ode.html#cb57-3"></a>    state: State&lt;<span class="dt">f64</span>&gt;,</span>
+<span id="cb57-4"><a href="ode.html#cb57-4"></a>    func: <span class="kw">fn</span>(&amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;),</span>
+<span id="cb57-5"><a href="ode.html#cb57-5"></a>    step_size: <span class="dt">f64</span>,</span>
+<span id="cb57-6"><a href="ode.html#cb57-6"></a>    method: ExMethod,</span>
+<span id="cb57-7"><a href="ode.html#cb57-7"></a>    init_cond: State&lt;<span class="dt">f64</span>&gt;,</span>
+<span id="cb57-8"><a href="ode.html#cb57-8"></a>    bound_cond1: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),</span>
+<span id="cb57-9"><a href="ode.html#cb57-9"></a>    bound_cond2: (State&lt;<span class="dt">f64</span>&gt;, BoundaryCondition),</span>
+<span id="cb57-10"><a href="ode.html#cb57-10"></a>    stop_cond: <span class="kw">fn</span>(&amp;<span class="kw">Self</span>) -&gt; <span class="dt">bool</span>,</span>
+<span id="cb57-11"><a href="ode.html#cb57-11"></a>    times: <span class="dt">usize</span>,</span>
+<span id="cb57-12"><a href="ode.html#cb57-12"></a>    to_use: HashMap&lt;ToUse, <span class="dt">bool</span>&gt;,</span>
+<span id="cb57-13"><a href="ode.html#cb57-13"></a><span class="op">}</span></span></code></pre></div>
 <ul>
 <li><code>state</code> : Current param, value, derivative</li>
 <li><code>func</code> : Function to update <code>state</code></li>
@@ -349,62 +352,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">9.2</span> Example</h2>
 <div id="lorenz-butterfly" class="section level3">
 <h3><span class="header-section-number">9.2.1</span> Lorenz Butterfly</h3>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
-<span class="kw">use</span> <span class="pp">peroxide::</span>*;
-
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">// =========================================</span>
-    <span class="co">//  Declare ODE</span>
-    <span class="co">// =========================================</span>
-    <span class="kw">let</span> <span class="kw">mut</span> ex_test = <span class="pp">ExplicitODE::</span>new(f);
-
-    <span class="kw">let</span> init_state: State&lt;<span class="dt">f64</span>&gt; = <span class="pp">State::</span>new(
-        <span class="dv">0.0</span>,
-        <span class="pp">vec!</span><span class="op">[</span><span class="dv">10.0</span>, <span class="dv">1.0</span>, <span class="dv">1.0</span><span class="op">]</span>,
-        <span class="pp">vec!</span><span class="op">[</span><span class="dv">0.0</span>, <span class="dv">0.0</span>, <span class="dv">0.0</span><span class="op">]</span>,
-    );
-
-    ex_test
-        .set_initial_condition(init_state)
-        .set_method(<span class="pp">ExMethod::</span>Euler)
-        .set_step_size(<span class="dv">0.01f64</span>)
-        .set_times(<span class="dv">10000</span>);
-
-    <span class="kw">let</span> <span class="kw">mut</span> ex_test2 = ex_test.clone();
-    ex_test2.set_method(<span class="pp">ExMethod::</span>RK4);
-
-    <span class="co">// =========================================</span>
-    <span class="co">//  Save results</span>
-    <span class="co">// =========================================</span>
-    <span class="kw">let</span> results = ex_test.integrate();    
-    <span class="kw">let</span> results2 = ex_test2.integrate();
-
-    <span class="co">// =========================================</span>
-    <span class="co">//  Write results to pickle</span>
-    <span class="co">// =========================================</span>
-    <span class="kw">let</span> <span class="kw">mut</span> wt = <span class="pp">SimpleWriter::</span>new();
-
-    wt
-        .set_path(<span class="st">&quot;example_data/lorenz.pickle&quot;</span>)
-        .insert_matrix(results)
-        .insert_matrix(results2)
-        .write_pickle();
-<span class="op">}</span>
-
-<span class="kw">fn</span> f(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span>
-    <span class="kw">let</span> x = &amp;st.value;
-    <span class="kw">let</span> dx = &amp;<span class="kw">mut</span> st.deriv;
-    dx<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = <span class="dv">10f64</span> * (x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span>);
-    dx<span class="op">[</span><span class="dv">1</span><span class="op">]</span> = <span class="dv">28f64</span> * x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span>;
-    dx<span class="op">[</span><span class="dv">2</span><span class="op">]</span> = -<span class="dv">8f64</span>/<span class="dv">3f64</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span> + x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">1</span><span class="op">]</span>;
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb58-1"><a href="ode.html#cb58-1"></a><span class="kw">extern</span> <span class="kw">crate</span> peroxide;</span>
+<span id="cb58-2"><a href="ode.html#cb58-2"></a><span class="kw">use</span> <span class="pp">peroxide::</span>*;</span>
+<span id="cb58-3"><a href="ode.html#cb58-3"></a></span>
+<span id="cb58-4"><a href="ode.html#cb58-4"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb58-5"><a href="ode.html#cb58-5"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-6"><a href="ode.html#cb58-6"></a>    <span class="co">//  Declare ODE</span></span>
+<span id="cb58-7"><a href="ode.html#cb58-7"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-8"><a href="ode.html#cb58-8"></a>    <span class="kw">let</span> <span class="kw">mut</span> ex_test = <span class="pp">ExplicitODE::</span>new(f);</span>
+<span id="cb58-9"><a href="ode.html#cb58-9"></a></span>
+<span id="cb58-10"><a href="ode.html#cb58-10"></a>    <span class="kw">let</span> init_state: State&lt;<span class="dt">f64</span>&gt; = <span class="pp">State::</span>new(</span>
+<span id="cb58-11"><a href="ode.html#cb58-11"></a>        <span class="dv">0.0</span>,</span>
+<span id="cb58-12"><a href="ode.html#cb58-12"></a>        <span class="pp">vec!</span><span class="op">[</span><span class="dv">10.0</span>, <span class="dv">1.0</span>, <span class="dv">1.0</span><span class="op">]</span>,</span>
+<span id="cb58-13"><a href="ode.html#cb58-13"></a>        <span class="pp">vec!</span><span class="op">[</span><span class="dv">0.0</span>, <span class="dv">0.0</span>, <span class="dv">0.0</span><span class="op">]</span>,</span>
+<span id="cb58-14"><a href="ode.html#cb58-14"></a>    );</span>
+<span id="cb58-15"><a href="ode.html#cb58-15"></a></span>
+<span id="cb58-16"><a href="ode.html#cb58-16"></a>    ex_test</span>
+<span id="cb58-17"><a href="ode.html#cb58-17"></a>        .set_initial_condition(init_state)</span>
+<span id="cb58-18"><a href="ode.html#cb58-18"></a>        .set_method(<span class="pp">ExMethod::</span>Euler)</span>
+<span id="cb58-19"><a href="ode.html#cb58-19"></a>        .set_step_size(<span class="dv">0.01f64</span>)</span>
+<span id="cb58-20"><a href="ode.html#cb58-20"></a>        .set_times(<span class="dv">10000</span>);</span>
+<span id="cb58-21"><a href="ode.html#cb58-21"></a></span>
+<span id="cb58-22"><a href="ode.html#cb58-22"></a>    <span class="kw">let</span> <span class="kw">mut</span> ex_test2 = ex_test.clone();</span>
+<span id="cb58-23"><a href="ode.html#cb58-23"></a>    ex_test2.set_method(<span class="pp">ExMethod::</span>RK4);</span>
+<span id="cb58-24"><a href="ode.html#cb58-24"></a></span>
+<span id="cb58-25"><a href="ode.html#cb58-25"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-26"><a href="ode.html#cb58-26"></a>    <span class="co">//  Save results</span></span>
+<span id="cb58-27"><a href="ode.html#cb58-27"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-28"><a href="ode.html#cb58-28"></a>    <span class="kw">let</span> results = ex_test.integrate();    </span>
+<span id="cb58-29"><a href="ode.html#cb58-29"></a>    <span class="kw">let</span> results2 = ex_test2.integrate();</span>
+<span id="cb58-30"><a href="ode.html#cb58-30"></a></span>
+<span id="cb58-31"><a href="ode.html#cb58-31"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-32"><a href="ode.html#cb58-32"></a>    <span class="co">//  Write results to pickle</span></span>
+<span id="cb58-33"><a href="ode.html#cb58-33"></a>    <span class="co">// =========================================</span></span>
+<span id="cb58-34"><a href="ode.html#cb58-34"></a>    <span class="kw">let</span> <span class="kw">mut</span> wt = <span class="pp">SimpleWriter::</span>new();</span>
+<span id="cb58-35"><a href="ode.html#cb58-35"></a></span>
+<span id="cb58-36"><a href="ode.html#cb58-36"></a>    wt</span>
+<span id="cb58-37"><a href="ode.html#cb58-37"></a>        .set_path(<span class="st">&quot;example_data/lorenz.pickle&quot;</span>)</span>
+<span id="cb58-38"><a href="ode.html#cb58-38"></a>        .insert_matrix(results)</span>
+<span id="cb58-39"><a href="ode.html#cb58-39"></a>        .insert_matrix(results2)</span>
+<span id="cb58-40"><a href="ode.html#cb58-40"></a>        .write_pickle();</span>
+<span id="cb58-41"><a href="ode.html#cb58-41"></a><span class="op">}</span></span>
+<span id="cb58-42"><a href="ode.html#cb58-42"></a></span>
+<span id="cb58-43"><a href="ode.html#cb58-43"></a><span class="kw">fn</span> f(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span></span>
+<span id="cb58-44"><a href="ode.html#cb58-44"></a>    <span class="kw">let</span> x = &amp;st.value;</span>
+<span id="cb58-45"><a href="ode.html#cb58-45"></a>    <span class="kw">let</span> dx = &amp;<span class="kw">mut</span> st.deriv;</span>
+<span id="cb58-46"><a href="ode.html#cb58-46"></a>    dx<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = <span class="dv">10f64</span> * (x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span>);</span>
+<span id="cb58-47"><a href="ode.html#cb58-47"></a>    dx<span class="op">[</span><span class="dv">1</span><span class="op">]</span> = <span class="dv">28f64</span> * x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">1</span><span class="op">]</span> - x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span>;</span>
+<span id="cb58-48"><a href="ode.html#cb58-48"></a>    dx<span class="op">[</span><span class="dv">2</span><span class="op">]</span> = -<span class="dv">8f64</span>/<span class="dv">3f64</span> * x<span class="op">[</span><span class="dv">2</span><span class="op">]</span> + x<span class="op">[</span><span class="dv">0</span><span class="op">]</span> * x<span class="op">[</span><span class="dv">1</span><span class="op">]</span>;</span>
+<span id="cb58-49"><a href="ode.html#cb58-49"></a><span class="op">}</span></span></code></pre></div>
 <p>If plotting pickle data with python, then</p>
 <div class="figure">
-<img src="image/lorenz_euler.png" alt="Lorenz with Euler" />
+<img src="image/lorenz_euler.png" alt="" />
 <p class="caption">Lorenz with Euler</p>
 </div>
 <div class="figure">
-<img src="image/lorenz_rk4.png" alt="Lorenz with RK4" />
+<img src="image/lorenz_rk4.png" alt="" />
 <p class="caption">Lorenz with RK4</p>
 </div>
 </div>
@@ -414,34 +417,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \frac{dy}{dx} = \frac{5x^2 - y}{e^{x+y}} \\
 y(0) = 1
 \end{gathered}\]</span></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> peroxide;
-<span class="kw">use</span> <span class="pp">peroxide::</span>*;
-
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> init_state = <span class="pp">State::</span>&lt;<span class="dt">f64</span>&gt;::new(<span class="dv">0f64</span>, <span class="pp">c!</span>(<span class="dv">1</span>), <span class="pp">c!</span>(<span class="dv">0</span>));
-
-    <span class="kw">let</span> <span class="kw">mut</span> ode_solver = <span class="pp">ExplicitODE::</span>new(test_fn);
-
-    ode_solver
-        .set_method(<span class="pp">ExMethod::</span>RK4)
-        .set_initial_condition(init_state)
-        .set_step_size(<span class="dv">0.01</span>)
-        .set_times(<span class="dv">1000</span>);
-
-    <span class="kw">let</span> result = ode_solver.integrate();
-
-    <span class="kw">let</span> <span class="kw">mut</span> st = <span class="pp">SimpleWriter::</span>new();
-    st.set_path(<span class="st">&quot;example_data/rk4_test.pickle&quot;</span>)
-        .insert_matrix(result)
-        .write_pickle();
-<span class="op">}</span>
-
-<span class="kw">fn</span> test_fn(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span>
-    <span class="kw">let</span> x = st.param;
-    <span class="kw">let</span> y = &amp;st.value;
-    <span class="kw">let</span> dy = &amp;<span class="kw">mut</span> st.deriv;
-    dy<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = (<span class="dv">5f64</span>*x.powi(<span class="dv">2</span>) - y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>) / (x + y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>).exp();
-<span class="op">}</span></code></pre>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb59-1"><a href="ode.html#cb59-1"></a><span class="kw">extern</span> <span class="kw">crate</span> peroxide;</span>
+<span id="cb59-2"><a href="ode.html#cb59-2"></a><span class="kw">use</span> <span class="pp">peroxide::</span>*;</span>
+<span id="cb59-3"><a href="ode.html#cb59-3"></a></span>
+<span id="cb59-4"><a href="ode.html#cb59-4"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb59-5"><a href="ode.html#cb59-5"></a>    <span class="kw">let</span> init_state = <span class="pp">State::</span>&lt;<span class="dt">f64</span>&gt;::new(<span class="dv">0f64</span>, <span class="pp">c!</span>(<span class="dv">1</span>), <span class="pp">c!</span>(<span class="dv">0</span>));</span>
+<span id="cb59-6"><a href="ode.html#cb59-6"></a></span>
+<span id="cb59-7"><a href="ode.html#cb59-7"></a>    <span class="kw">let</span> <span class="kw">mut</span> ode_solver = <span class="pp">ExplicitODE::</span>new(test_fn);</span>
+<span id="cb59-8"><a href="ode.html#cb59-8"></a></span>
+<span id="cb59-9"><a href="ode.html#cb59-9"></a>    ode_solver</span>
+<span id="cb59-10"><a href="ode.html#cb59-10"></a>        .set_method(<span class="pp">ExMethod::</span>RK4)</span>
+<span id="cb59-11"><a href="ode.html#cb59-11"></a>        .set_initial_condition(init_state)</span>
+<span id="cb59-12"><a href="ode.html#cb59-12"></a>        .set_step_size(<span class="dv">0.01</span>)</span>
+<span id="cb59-13"><a href="ode.html#cb59-13"></a>        .set_times(<span class="dv">1000</span>);</span>
+<span id="cb59-14"><a href="ode.html#cb59-14"></a></span>
+<span id="cb59-15"><a href="ode.html#cb59-15"></a>    <span class="kw">let</span> result = ode_solver.integrate();</span>
+<span id="cb59-16"><a href="ode.html#cb59-16"></a></span>
+<span id="cb59-17"><a href="ode.html#cb59-17"></a>    <span class="kw">let</span> <span class="kw">mut</span> st = <span class="pp">SimpleWriter::</span>new();</span>
+<span id="cb59-18"><a href="ode.html#cb59-18"></a>    st.set_path(<span class="st">&quot;example_data/rk4_test.pickle&quot;</span>)</span>
+<span id="cb59-19"><a href="ode.html#cb59-19"></a>        .insert_matrix(result)</span>
+<span id="cb59-20"><a href="ode.html#cb59-20"></a>        .write_pickle();</span>
+<span id="cb59-21"><a href="ode.html#cb59-21"></a><span class="op">}</span></span>
+<span id="cb59-22"><a href="ode.html#cb59-22"></a></span>
+<span id="cb59-23"><a href="ode.html#cb59-23"></a><span class="kw">fn</span> test_fn(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span></span>
+<span id="cb59-24"><a href="ode.html#cb59-24"></a>    <span class="kw">let</span> x = st.param;</span>
+<span id="cb59-25"><a href="ode.html#cb59-25"></a>    <span class="kw">let</span> y = &amp;st.value;</span>
+<span id="cb59-26"><a href="ode.html#cb59-26"></a>    <span class="kw">let</span> dy = &amp;<span class="kw">mut</span> st.deriv;</span>
+<span id="cb59-27"><a href="ode.html#cb59-27"></a>    dy<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = (<span class="dv">5f64</span>*x.powi(<span class="dv">2</span>) - y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>) / (x + y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>).exp();</span>
+<span id="cb59-28"><a href="ode.html#cb59-28"></a><span class="op">}</span></span></code></pre></div>
 
 </div>
 </div>
@@ -452,7 +455,7 @@ y(0) = 1
         </div>
       </div>
 <a href="ad.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="plot.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

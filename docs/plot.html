@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6 Functional Programming | Peroxide Guide</title>
+  <title>10 Plot | Peroxide Guide</title>
   <meta name="description" content="This book is a guide for Peroxide - Rust numerical library" />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6 Functional Programming | Peroxide Guide" />
+  <meta property="og:title" content="10 Plot | Peroxide Guide" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="Axect/Peroxide_Gitbook" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6 Functional Programming | Peroxide Guide" />
+  <meta name="twitter:title" content="10 Plot | Peroxide Guide" />
   
   <meta name="twitter:description" content="This book is a guide for Peroxide - Rust numerical library" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="linear.html">
-<link rel="next" href="statistics.html">
+<link rel="prev" href="ode.html">
+<link rel="next" href="references.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -232,149 +232,83 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="functional" class="section level1">
-<h1><span class="header-section-number">6</span> Functional Programming</h1>
-<div id="fp-for-vector" class="section level2">
-<h2><span class="header-section-number">6.1</span> FP for Vector</h2>
-<ul>
-<li><p>There are some functional programming tools for <code>Vec&lt;f64&gt;</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb33-1"><a href="functional.html#cb33-1"></a><span class="kw">pub</span> <span class="kw">trait</span> FPVector <span class="op">{</span></span>
-<span id="cb33-2"><a href="functional.html#cb33-2"></a>    <span class="kw">type</span> Scalar;</span>
-<span id="cb33-3"><a href="functional.html#cb33-3"></a></span>
-<span id="cb33-4"><a href="functional.html#cb33-4"></a>    <span class="kw">fn</span> fmap&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; <span class="kw">Self</span></span>
-<span id="cb33-5"><a href="functional.html#cb33-5"></a>    <span class="kw">where</span></span>
-<span id="cb33-6"><a href="functional.html#cb33-6"></a>        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar;</span>
-<span id="cb33-7"><a href="functional.html#cb33-7"></a>    <span class="kw">fn</span> reduce&lt;F, T&gt;(&amp;<span class="kw">self</span>, init: T, f: F) -&gt; <span class="kw">Self</span>::Scalar</span>
-<span id="cb33-8"><a href="functional.html#cb33-8"></a>    <span class="kw">where</span></span>
-<span id="cb33-9"><a href="functional.html#cb33-9"></a>        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar, <span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar,</span>
-<span id="cb33-10"><a href="functional.html#cb33-10"></a>        T: <span class="pp">convert::</span><span class="bu">Into</span>&lt;<span class="kw">Self</span>::Scalar&gt;;</span>
-<span id="cb33-11"><a href="functional.html#cb33-11"></a>    <span class="kw">fn</span> zip_with&lt;F&gt;(&amp;<span class="kw">self</span>, f: F, other: &amp;<span class="kw">Self</span>) -&gt; <span class="kw">Self</span></span>
-<span id="cb33-12"><a href="functional.html#cb33-12"></a>    <span class="kw">where</span></span>
-<span id="cb33-13"><a href="functional.html#cb33-13"></a>        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar, <span class="kw">Self</span>::Scalar) -&gt; <span class="kw">Self</span>::Scalar;</span>
-<span id="cb33-14"><a href="functional.html#cb33-14"></a>    <span class="kw">fn</span> filter&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; <span class="kw">Self</span></span>
-<span id="cb33-15"><a href="functional.html#cb33-15"></a>    <span class="kw">where</span></span>
-<span id="cb33-16"><a href="functional.html#cb33-16"></a>        F: <span class="bu">Fn</span>(<span class="kw">Self</span>::Scalar) -&gt; <span class="dt">bool</span>;</span>
-<span id="cb33-17"><a href="functional.html#cb33-17"></a>    <span class="kw">fn</span> take(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="kw">Self</span>;</span>
-<span id="cb33-18"><a href="functional.html#cb33-18"></a>    <span class="kw">fn</span> skip(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="kw">Self</span>;</span>
-<span id="cb33-19"><a href="functional.html#cb33-19"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-<div id="fmap" class="section level3">
-<h3><span class="header-section-number">6.1.1</span> fmap</h3>
-<ul>
-<li><p><code>fmap</code> is syntactic sugar for <code>map</code></p></li>
-<li><p>But different to original <code>map</code> - Only <code>f64 -&gt; f64</code> allowed.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb34-1"><a href="functional.html#cb34-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb34-2"><a href="functional.html#cb34-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb34-3"><a href="functional.html#cb34-3"></a></span>
-<span id="cb34-4"><a href="functional.html#cb34-4"></a>    <span class="co">// Original rust</span></span>
-<span id="cb34-5"><a href="functional.html#cb34-5"></a>    a.clone()</span>
-<span id="cb34-6"><a href="functional.html#cb34-6"></a>        .into_iter()</span>
-<span id="cb34-7"><a href="functional.html#cb34-7"></a>        .map(|x| x + <span class="dv">1f64</span>)</span>
-<span id="cb34-8"><a href="functional.html#cb34-8"></a>        .<span class="pp">collect::</span>&lt;<span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;&gt;()</span>
-<span id="cb34-9"><a href="functional.html#cb34-9"></a>        .print();</span>
-<span id="cb34-10"><a href="functional.html#cb34-10"></a>        <span class="co">// [2, 3, 4, 5]</span></span>
-<span id="cb34-11"><a href="functional.html#cb34-11"></a></span>
-<span id="cb34-12"><a href="functional.html#cb34-12"></a>    <span class="co">// fmap in Peroxide</span></span>
-<span id="cb34-13"><a href="functional.html#cb34-13"></a>    a.fmap(|x| x + <span class="dv">1f64</span>).print();</span>
-<span id="cb34-14"><a href="functional.html#cb34-14"></a>    <span class="co">// [2, 3, 4, 5]</span></span>
-<span id="cb34-15"><a href="functional.html#cb34-15"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-</div>
-<div id="reduce" class="section level3">
-<h3><span class="header-section-number">6.1.2</span> reduce</h3>
-<ul>
-<li><p><code>reduce</code> is syntactic sugar for <code>fold</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb35-1"><a href="functional.html#cb35-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb35-2"><a href="functional.html#cb35-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb35-3"><a href="functional.html#cb35-3"></a></span>
-<span id="cb35-4"><a href="functional.html#cb35-4"></a>    <span class="co">// Original rust</span></span>
-<span id="cb35-5"><a href="functional.html#cb35-5"></a>    a.clone()</span>
-<span id="cb35-6"><a href="functional.html#cb35-6"></a>        .into_iter()</span>
-<span id="cb35-7"><a href="functional.html#cb35-7"></a>        .fold(<span class="dv">0f64</span>, |x, y| x + y)</span>
-<span id="cb35-8"><a href="functional.html#cb35-8"></a>        .print(); <span class="co">// 10</span></span>
-<span id="cb35-9"><a href="functional.html#cb35-9"></a></span>
-<span id="cb35-10"><a href="functional.html#cb35-10"></a>    <span class="co">// reduce in Peroxide</span></span>
-<span id="cb35-11"><a href="functional.html#cb35-11"></a>    a.reduce(<span class="dv">0f64</span>, |x, y| x + y).print(); <span class="co">// 10</span></span>
-<span id="cb35-12"><a href="functional.html#cb35-12"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-</div>
-<div id="zip_with" class="section level3">
-<h3><span class="header-section-number">6.1.3</span> zip_with</h3>
-<ul>
-<li><p><code>zip_with</code> is composed of <code>zip</code> &amp; <code>map</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb36-1"><a href="functional.html#cb36-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb36-2"><a href="functional.html#cb36-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb36-3"><a href="functional.html#cb36-3"></a>    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>);</span>
-<span id="cb36-4"><a href="functional.html#cb36-4"></a></span>
-<span id="cb36-5"><a href="functional.html#cb36-5"></a>    <span class="co">// Original rust</span></span>
-<span id="cb36-6"><a href="functional.html#cb36-6"></a>    a.clone()</span>
-<span id="cb36-7"><a href="functional.html#cb36-7"></a>        .into_iter()</span>
-<span id="cb36-8"><a href="functional.html#cb36-8"></a>        .zip(&amp;b)</span>
-<span id="cb36-9"><a href="functional.html#cb36-9"></a>        .map(|(x, y)| x + *y)</span>
-<span id="cb36-10"><a href="functional.html#cb36-10"></a>        .<span class="pp">collect::</span>&lt;<span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;&gt;().print();</span>
-<span id="cb36-11"><a href="functional.html#cb36-11"></a>        <span class="co">// [6, 8, 10, 12]</span></span>
-<span id="cb36-12"><a href="functional.html#cb36-12"></a></span>
-<span id="cb36-13"><a href="functional.html#cb36-13"></a>    <span class="co">// zip_with in Peroxide</span></span>
-<span id="cb36-14"><a href="functional.html#cb36-14"></a>    a.zip_with(|x, y| x + y, &amp;b).print();</span>
-<span id="cb36-15"><a href="functional.html#cb36-15"></a>    <span class="co">// [6, 8, 10, 12]</span></span>
-<span id="cb36-16"><a href="functional.html#cb36-16"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-</div>
-<div id="filter" class="section level3">
-<h3><span class="header-section-number">6.1.4</span> filter</h3>
-<ul>
-<li><p><code>filter</code> is just syntactic sugar for <code>filter</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb37-1"><a href="functional.html#cb37-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb37-2"><a href="functional.html#cb37-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb37-3"><a href="functional.html#cb37-3"></a>    a.filter(|x| x &gt; <span class="dv">2f64</span>).print();</span>
-<span id="cb37-4"><a href="functional.html#cb37-4"></a>    <span class="co">// [3, 4]</span></span>
-<span id="cb37-5"><a href="functional.html#cb37-5"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-</div>
-<div id="take-skip" class="section level3">
-<h3><span class="header-section-number">6.1.5</span> take &amp; skip</h3>
-<ul>
-<li><p><code>take</code> is syntactic sugar for <code>take</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb38-1"><a href="functional.html#cb38-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb38-2"><a href="functional.html#cb38-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb38-3"><a href="functional.html#cb38-3"></a>    a.take(<span class="dv">2</span>).print();</span>
-<span id="cb38-4"><a href="functional.html#cb38-4"></a>    <span class="co">// [1, 2]</span></span>
-<span id="cb38-5"><a href="functional.html#cb38-5"></a><span class="op">}</span></span></code></pre></div></li>
-<li><p><code>skip</code> is syntactic sugar for <code>skip</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb39-1"><a href="functional.html#cb39-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
-<span id="cb39-2"><a href="functional.html#cb39-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
-<span id="cb39-3"><a href="functional.html#cb39-3"></a>    a.skip(<span class="dv">2</span>).print();</span>
-<span id="cb39-4"><a href="functional.html#cb39-4"></a>    <span class="co">// [3, 4]</span></span>
-<span id="cb39-5"><a href="functional.html#cb39-5"></a><span class="op">}</span></span></code></pre></div></li>
-</ul>
-</div>
-</div>
-<div id="fp-for-matrix" class="section level2">
-<h2><span class="header-section-number">6.2</span> FP for Matrix</h2>
-<ul>
-<li><p>Similar to <code>FPVector</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb40-1"><a href="functional.html#cb40-1"></a><span class="kw">pub</span> <span class="kw">trait</span> FP <span class="op">{</span></span>
-<span id="cb40-2"><a href="functional.html#cb40-2"></a>    <span class="kw">fn</span> take(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>, shape: Shape) -&gt; Matrix;</span>
-<span id="cb40-3"><a href="functional.html#cb40-3"></a>    <span class="kw">fn</span> skip(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>, shape: Shape) -&gt; Matrix;</span>
-<span id="cb40-4"><a href="functional.html#cb40-4"></a>    <span class="kw">fn</span> fmap&lt;F&gt;(&amp;<span class="kw">self</span>, f: F) -&gt; Matrix <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>) -&gt; <span class="dt">f64</span>;</span>
-<span id="cb40-5"><a href="functional.html#cb40-5"></a>    <span class="kw">fn</span> reduce&lt;F, T&gt;(&amp;<span class="kw">self</span>, init: T, f: F) -&gt; <span class="dt">f64</span> </span>
-<span id="cb40-6"><a href="functional.html#cb40-6"></a>        <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>, <span class="dt">f64</span>) -&gt; <span class="dt">f64</span>,</span>
-<span id="cb40-7"><a href="functional.html#cb40-7"></a>            T: <span class="pp">convert::</span><span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;;</span>
-<span id="cb40-8"><a href="functional.html#cb40-8"></a>    <span class="kw">fn</span> zip_with&lt;F&gt;(&amp;<span class="kw">self</span>, f: F, other: &amp;Matrix) -&gt; Matrix </span>
-<span id="cb40-9"><a href="functional.html#cb40-9"></a>        <span class="kw">where</span> F: <span class="bu">Fn</span>(<span class="dt">f64</span>, <span class="dt">f64</span>) -&gt; <span class="dt">f64</span>;</span>
-<span id="cb40-10"><a href="functional.html#cb40-10"></a><span class="op">}</span></span></code></pre></div></li>
-<li><p>Above functions play same roles as <code>FPVector</code></p></li>
-</ul>
+<div id="plot" class="section level1">
+<h1><span class="header-section-number">10</span> Plot</h1>
+<p>For Rust, there are some plot libraries but, still difficult to use.
+Practically, using python is best choice to plot. And there is awesome crate - <a href="https://crates.io/crates/inline-python">inline-python</a>.</p>
+<p>Let’s combine <code>peroxide</code> &amp; <code>inline-python</code>. Let’s see below code.</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb60-1"><a href="plot.html#cb60-1"></a><span class="kw">extern</span> <span class="kw">crate</span> peroxide;</span>
+<span id="cb60-2"><a href="plot.html#cb60-2"></a><span class="kw">use</span> <span class="pp">peroxide::</span>*;</span>
+<span id="cb60-3"><a href="plot.html#cb60-3"></a></span>
+<span id="cb60-4"><a href="plot.html#cb60-4"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb60-5"><a href="plot.html#cb60-5"></a>    <span class="kw">let</span> init_state = <span class="pp">State::</span>&lt;<span class="dt">f64</span>&gt;::new(<span class="dv">0f64</span>, <span class="pp">c!</span>(<span class="dv">1</span>), <span class="pp">c!</span>(<span class="dv">0</span>));</span>
+<span id="cb60-6"><a href="plot.html#cb60-6"></a></span>
+<span id="cb60-7"><a href="plot.html#cb60-7"></a>    <span class="kw">let</span> <span class="kw">mut</span> ode_solver = <span class="pp">ExplicitODE::</span>new(test_fn);</span>
+<span id="cb60-8"><a href="plot.html#cb60-8"></a></span>
+<span id="cb60-9"><a href="plot.html#cb60-9"></a>    ode_solver</span>
+<span id="cb60-10"><a href="plot.html#cb60-10"></a>        .set_method(<span class="pp">ExMethod::</span>RK4)</span>
+<span id="cb60-11"><a href="plot.html#cb60-11"></a>        .set_initial_condition(init_state)</span>
+<span id="cb60-12"><a href="plot.html#cb60-12"></a>        .set_step_size(<span class="dv">0.01</span>)</span>
+<span id="cb60-13"><a href="plot.html#cb60-13"></a>        .set_times(<span class="dv">1000</span>);</span>
+<span id="cb60-14"><a href="plot.html#cb60-14"></a></span>
+<span id="cb60-15"><a href="plot.html#cb60-15"></a>    <span class="kw">let</span> result = ode_solver.integrate();</span>
+<span id="cb60-16"><a href="plot.html#cb60-16"></a></span>
+<span id="cb60-17"><a href="plot.html#cb60-17"></a>    <span class="kw">let</span> <span class="kw">mut</span> st = <span class="pp">SimpleWriter::</span>new();</span>
+<span id="cb60-18"><a href="plot.html#cb60-18"></a>    st.set_path(<span class="st">&quot;example_data/rk4_test.pickle&quot;</span>)</span>
+<span id="cb60-19"><a href="plot.html#cb60-19"></a>        .insert_matrix(result)</span>
+<span id="cb60-20"><a href="plot.html#cb60-20"></a>        .write_pickle();</span>
+<span id="cb60-21"><a href="plot.html#cb60-21"></a><span class="op">}</span></span>
+<span id="cb60-22"><a href="plot.html#cb60-22"></a></span>
+<span id="cb60-23"><a href="plot.html#cb60-23"></a><span class="kw">fn</span> test_fn(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span></span>
+<span id="cb60-24"><a href="plot.html#cb60-24"></a>    <span class="kw">let</span> x = st.param;</span>
+<span id="cb60-25"><a href="plot.html#cb60-25"></a>    <span class="kw">let</span> y = &amp;st.value;</span>
+<span id="cb60-26"><a href="plot.html#cb60-26"></a>    <span class="kw">let</span> dy = &amp;<span class="kw">mut</span> st.deriv;</span>
+<span id="cb60-27"><a href="plot.html#cb60-27"></a>    dy<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = (<span class="dv">5f64</span>*x.powi(<span class="dv">2</span>) - y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>) / (x + y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>).exp();</span>
+<span id="cb60-28"><a href="plot.html#cb60-28"></a><span class="op">}</span></span></code></pre></div>
+<p>Now, let’s modify this code to below. Then it works surprisingly!</p>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb61-1"><a href="plot.html#cb61-1"></a><span class="at">#![</span>feature<span class="at">(</span>proc_macro_hygiene<span class="at">)]</span></span>
+<span id="cb61-2"><a href="plot.html#cb61-2"></a><span class="kw">extern</span> <span class="kw">crate</span> inline_python;</span>
+<span id="cb61-3"><a href="plot.html#cb61-3"></a><span class="kw">extern</span> <span class="kw">crate</span> peroxide;</span>
+<span id="cb61-4"><a href="plot.html#cb61-4"></a><span class="kw">use</span> <span class="pp">peroxide::</span>*;</span>
+<span id="cb61-5"><a href="plot.html#cb61-5"></a><span class="kw">use</span> <span class="pp">inline_python::</span>python;</span>
+<span id="cb61-6"><a href="plot.html#cb61-6"></a></span>
+<span id="cb61-7"><a href="plot.html#cb61-7"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb61-8"><a href="plot.html#cb61-8"></a>    <span class="kw">let</span> init_state = <span class="pp">State::</span>&lt;<span class="dt">f64</span>&gt;::new(<span class="dv">0f64</span>, <span class="pp">c!</span>(<span class="dv">1</span>), <span class="pp">c!</span>(<span class="dv">0</span>));</span>
+<span id="cb61-9"><a href="plot.html#cb61-9"></a></span>
+<span id="cb61-10"><a href="plot.html#cb61-10"></a>    <span class="kw">let</span> <span class="kw">mut</span> ode_solver = <span class="pp">ExplicitODE::</span>new(test_fn);</span>
+<span id="cb61-11"><a href="plot.html#cb61-11"></a></span>
+<span id="cb61-12"><a href="plot.html#cb61-12"></a>    ode_solver</span>
+<span id="cb61-13"><a href="plot.html#cb61-13"></a>        .set_method(<span class="pp">ExMethod::</span>RK4)</span>
+<span id="cb61-14"><a href="plot.html#cb61-14"></a>        .set_initial_condition(init_state)</span>
+<span id="cb61-15"><a href="plot.html#cb61-15"></a>        .set_step_size(<span class="dv">0.01</span>)</span>
+<span id="cb61-16"><a href="plot.html#cb61-16"></a>        .set_times(<span class="dv">1000</span>);</span>
+<span id="cb61-17"><a href="plot.html#cb61-17"></a></span>
+<span id="cb61-18"><a href="plot.html#cb61-18"></a>    <span class="kw">let</span> result = ode_solver.integrate();</span>
+<span id="cb61-19"><a href="plot.html#cb61-19"></a>    <span class="kw">let</span> x = result.col(<span class="dv">0</span>);</span>
+<span id="cb61-20"><a href="plot.html#cb61-20"></a>    <span class="kw">let</span> y = result.col(<span class="dv">1</span>);</span>
+<span id="cb61-21"><a href="plot.html#cb61-21"></a></span>
+<span id="cb61-22"><a href="plot.html#cb61-22"></a>    <span class="pp">python!</span> <span class="op">{</span></span>
+<span id="cb61-23"><a href="plot.html#cb61-23"></a>        import pylab <span class="kw">as</span> plt</span>
+<span id="cb61-24"><a href="plot.html#cb61-24"></a>        plt.plot(<span class="ot">&#39;x</span>, <span class="ot">&#39;y</span>)</span>
+<span id="cb61-25"><a href="plot.html#cb61-25"></a>        plt.show()</span>
+<span id="cb61-26"><a href="plot.html#cb61-26"></a>    <span class="op">}</span></span>
+<span id="cb61-27"><a href="plot.html#cb61-27"></a><span class="op">}</span></span>
+<span id="cb61-28"><a href="plot.html#cb61-28"></a></span>
+<span id="cb61-29"><a href="plot.html#cb61-29"></a><span class="kw">fn</span> test_fn(st: &amp;<span class="kw">mut</span> State&lt;<span class="dt">f64</span>&gt;) <span class="op">{</span></span>
+<span id="cb61-30"><a href="plot.html#cb61-30"></a>    <span class="kw">let</span> x = st.param;</span>
+<span id="cb61-31"><a href="plot.html#cb61-31"></a>    <span class="kw">let</span> y = &amp;st.value;</span>
+<span id="cb61-32"><a href="plot.html#cb61-32"></a>    <span class="kw">let</span> dy = &amp;<span class="kw">mut</span> st.deriv;</span>
+<span id="cb61-33"><a href="plot.html#cb61-33"></a>    dy<span class="op">[</span><span class="dv">0</span><span class="op">]</span> = (<span class="dv">5f64</span>*x.powi(<span class="dv">2</span>) - y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>) / (x + y<span class="op">[</span><span class="dv">0</span><span class="op">]</span>).exp();</span>
+<span id="cb61-34"><a href="plot.html#cb61-34"></a><span class="op">}</span></span></code></pre></div>
 
-</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="linear.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="statistics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ode.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -404,7 +338,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/05-functional.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/09-plot.Rmd",
 "text": "Edit"
 },
 "history": {

@@ -24,7 +24,7 @@
 <meta name="author" content="Axect" />
 
 
-<meta name="date" content="2019-06-27" />
+<meta name="date" content="2019-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,9 +50,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -62,14 +62,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -78,9 +80,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -208,6 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.2" data-path="ode.html"><a href="ode.html#simple-1d-runge-kutta"><i class="fa fa-check"></i><b>9.2.2</b> Simple 1D Runge-Kutta</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="plot.html"><a href="plot.html"><i class="fa fa-check"></i><b>10</b> Plot</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -242,35 +245,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>cov</code> : covariance</li>
 <li><code>cor</code> : correlation coefficient</li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> Statistics <span class="op">{</span>
-    <span class="kw">type</span> Array;
-    <span class="kw">type</span> Value;
-
-    <span class="kw">fn</span> mean(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> var(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> sd(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;
-    <span class="kw">fn</span> cov(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
-    <span class="kw">fn</span> cor(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb41-1"><a href="statistics.html#cb41-1"></a><span class="kw">pub</span> <span class="kw">trait</span> Statistics <span class="op">{</span></span>
+<span id="cb41-2"><a href="statistics.html#cb41-2"></a>    <span class="kw">type</span> Array;</span>
+<span id="cb41-3"><a href="statistics.html#cb41-3"></a>    <span class="kw">type</span> Value;</span>
+<span id="cb41-4"><a href="statistics.html#cb41-4"></a></span>
+<span id="cb41-5"><a href="statistics.html#cb41-5"></a>    <span class="kw">fn</span> mean(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;</span>
+<span id="cb41-6"><a href="statistics.html#cb41-6"></a>    <span class="kw">fn</span> var(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;</span>
+<span id="cb41-7"><a href="statistics.html#cb41-7"></a>    <span class="kw">fn</span> sd(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Value;</span>
+<span id="cb41-8"><a href="statistics.html#cb41-8"></a>    <span class="kw">fn</span> cov(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;</span>
+<span id="cb41-9"><a href="statistics.html#cb41-9"></a>    <span class="kw">fn</span> cor(&amp;<span class="kw">self</span>) -&gt; <span class="kw">Self</span>::Array;</span>
+<span id="cb41-10"><a href="statistics.html#cb41-10"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 <div id="for-vecf64" class="section level3">
 <h3><span class="header-section-number">7.1.1</span> For <code>Vec&lt;f64&gt;</code></h3>
 <ul>
 <li><p>Caution: For <code>Vec&lt;f64&gt;</code>, <code>cov</code> &amp; <code>cor</code> are unimplemented (those for <code>Matrix</code>)</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>);
-    a.mean().print(); <span class="co">// 3</span>
-    a.var().print();  <span class="co">// 2.5</span>
-    a.sd().print();   <span class="co">// 1.5811388300841898</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb42-1"><a href="statistics.html#cb42-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb42-2"><a href="statistics.html#cb42-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>);</span>
+<span id="cb42-3"><a href="statistics.html#cb42-3"></a>    a.mean().print(); <span class="co">// 3</span></span>
+<span id="cb42-4"><a href="statistics.html#cb42-4"></a>    a.var().print();  <span class="co">// 2.5</span></span>
+<span id="cb42-5"><a href="statistics.html#cb42-5"></a>    a.sd().print();   <span class="co">// 1.5811388300841898</span></span>
+<span id="cb42-6"><a href="statistics.html#cb42-6"></a><span class="op">}</span></span></code></pre></div></li>
 <li><p>But there are other functions to calculate <code>cov</code> &amp; <code>cor</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> v1 = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>);
-    <span class="kw">let</span> v2 = <span class="pp">c!</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);
-
-    cov(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999998</span>
-    cor(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999993</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb43-1"><a href="statistics.html#cb43-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb43-2"><a href="statistics.html#cb43-2"></a>    <span class="kw">let</span> v1 = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>);</span>
+<span id="cb43-3"><a href="statistics.html#cb43-3"></a>    <span class="kw">let</span> v2 = <span class="pp">c!</span>(<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);</span>
+<span id="cb43-4"><a href="statistics.html#cb43-4"></a></span>
+<span id="cb43-5"><a href="statistics.html#cb43-5"></a>    cov(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999998</span></span>
+<span id="cb43-6"><a href="statistics.html#cb43-6"></a>    cor(&amp;v1, &amp;v2).print(); <span class="co">// -0.9999999999999993</span></span>
+<span id="cb43-7"><a href="statistics.html#cb43-7"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="for-matrix" class="section level3">
@@ -278,23 +281,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>For <code>Matrix</code>, <code>mean, var, sd</code> means column operations</p></li>
 <li><p><code>cov</code> means covariance matrix &amp; <code>cor</code> means also correlation coefficient matrix</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> m = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">2</span>, Col);
-
-    m.mean().print(); <span class="co">// [2, 2]</span>
-    m.var().print();  <span class="co">// [1.0000, 1.0000]</span>
-    m.sd().print();   <span class="co">// [1.0000, 1.0000]</span>
-
-    m.cov().print();
-    <span class="co">//         c[0]    c[1]</span>
-    <span class="co">// r[0]  1.0000 -1.0000</span>
-    <span class="co">// r[1] -1.0000  1.0000</span>
-
-    m.cor().print();
-    <span class="co">//         c[0]    c[1]</span>
-    <span class="co">// r[0]       1 -1.0000</span>
-    <span class="co">// r[1] -1.0000       1</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb44-1"><a href="statistics.html#cb44-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb44-2"><a href="statistics.html#cb44-2"></a>    <span class="kw">let</span> m = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>), <span class="dv">3</span>, <span class="dv">2</span>, Col);</span>
+<span id="cb44-3"><a href="statistics.html#cb44-3"></a></span>
+<span id="cb44-4"><a href="statistics.html#cb44-4"></a>    m.mean().print(); <span class="co">// [2, 2]</span></span>
+<span id="cb44-5"><a href="statistics.html#cb44-5"></a>    m.var().print();  <span class="co">// [1.0000, 1.0000]</span></span>
+<span id="cb44-6"><a href="statistics.html#cb44-6"></a>    m.sd().print();   <span class="co">// [1.0000, 1.0000]</span></span>
+<span id="cb44-7"><a href="statistics.html#cb44-7"></a></span>
+<span id="cb44-8"><a href="statistics.html#cb44-8"></a>    m.cov().print();</span>
+<span id="cb44-9"><a href="statistics.html#cb44-9"></a>    <span class="co">//         c[0]    c[1]</span></span>
+<span id="cb44-10"><a href="statistics.html#cb44-10"></a>    <span class="co">// r[0]  1.0000 -1.0000</span></span>
+<span id="cb44-11"><a href="statistics.html#cb44-11"></a>    <span class="co">// r[1] -1.0000  1.0000</span></span>
+<span id="cb44-12"><a href="statistics.html#cb44-12"></a></span>
+<span id="cb44-13"><a href="statistics.html#cb44-13"></a>    m.cor().print();</span>
+<span id="cb44-14"><a href="statistics.html#cb44-14"></a>    <span class="co">//         c[0]    c[1]</span></span>
+<span id="cb44-15"><a href="statistics.html#cb44-15"></a>    <span class="co">// r[0]       1 -1.0000</span></span>
+<span id="cb44-16"><a href="statistics.html#cb44-16"></a>    <span class="co">// r[1] -1.0000       1</span></span>
+<span id="cb44-17"><a href="statistics.html#cb44-17"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 </div>
@@ -302,14 +305,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">7.2</span> Simple Random Number Generator</h2>
 <ul>
 <li><p>Peroxide uses external <a href="https://crates.io/crates/rand"><code>rand</code> crate</a> to generate random number</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">extern</span> <span class="kw">crate</span> rand;
-<span class="kw">use</span> <span class="kw">self</span>::<span class="pp">rand::prelude::</span>*;
-
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> <span class="kw">mut</span> rng = thread_rng();
-
-    <span class="kw">let</span> a = rng.gen_range(<span class="dv">0f64</span>, <span class="dv">1f64</span>); <span class="co">// Generate random f64 number ranges from 0 to 1</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb45-1"><a href="statistics.html#cb45-1"></a><span class="kw">extern</span> <span class="kw">crate</span> rand;</span>
+<span id="cb45-2"><a href="statistics.html#cb45-2"></a><span class="kw">use</span> <span class="kw">self</span>::<span class="pp">rand::prelude::</span>*;</span>
+<span id="cb45-3"><a href="statistics.html#cb45-3"></a></span>
+<span id="cb45-4"><a href="statistics.html#cb45-4"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb45-5"><a href="statistics.html#cb45-5"></a>    <span class="kw">let</span> <span class="kw">mut</span> rng = thread_rng();</span>
+<span id="cb45-6"><a href="statistics.html#cb45-6"></a></span>
+<span id="cb45-7"><a href="statistics.html#cb45-7"></a>    <span class="kw">let</span> a = rng.gen_range(<span class="dv">0f64</span>, <span class="dv">1f64</span>); <span class="co">// Generate random f64 number ranges from 0 to 1</span></span>
+<span id="cb45-8"><a href="statistics.html#cb45-8"></a><span class="op">}</span></span></code></pre></div></li>
 <li><p>To want more detailed explanation, see <a href="https://crates.io/crates/rand"><code>rand</code> crate</a></p></li>
 </ul>
 </div>
@@ -357,16 +360,16 @@ Wishart</li>
 <li><code>sample</code>: Extract samples</li>
 <li><code>pdf</code> : Calculate pdf value at specific point</li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">pub</span> <span class="kw">trait</span> RNG <span class="op">{</span>
-    <span class="co">/// Extract samples of distributions</span>
-    <span class="kw">fn</span> sample(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;;
-
-    <span class="co">/// Probability Distribution Function</span>
-    <span class="co">///</span>
-    <span class="co">/// # Type</span>
-    <span class="co">/// `f64 -&gt; f64`</span>
-    <span class="kw">fn</span> pdf&lt;S: <span class="bu">PartialOrd</span> + SampleUniform + <span class="bu">Copy</span> + <span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;&gt;(&amp;<span class="kw">self</span>, x: S) -&gt; <span class="dt">f64</span>;
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb46-1"><a href="statistics.html#cb46-1"></a><span class="kw">pub</span> <span class="kw">trait</span> RNG <span class="op">{</span></span>
+<span id="cb46-2"><a href="statistics.html#cb46-2"></a>    <span class="co">/// Extract samples of distributions</span></span>
+<span id="cb46-3"><a href="statistics.html#cb46-3"></a>    <span class="kw">fn</span> sample(&amp;<span class="kw">self</span>, n: <span class="dt">usize</span>) -&gt; <span class="dt">Vec</span>&lt;<span class="dt">f64</span>&gt;;</span>
+<span id="cb46-4"><a href="statistics.html#cb46-4"></a></span>
+<span id="cb46-5"><a href="statistics.html#cb46-5"></a>    <span class="co">/// Probability Distribution Function</span></span>
+<span id="cb46-6"><a href="statistics.html#cb46-6"></a>    <span class="co">///</span></span>
+<span id="cb46-7"><a href="statistics.html#cb46-7"></a>    <span class="co">/// # Type</span></span>
+<span id="cb46-8"><a href="statistics.html#cb46-8"></a>    <span class="co">/// `f64 -&gt; f64`</span></span>
+<span id="cb46-9"><a href="statistics.html#cb46-9"></a>    <span class="kw">fn</span> pdf&lt;S: <span class="bu">PartialOrd</span> + SampleUniform + <span class="bu">Copy</span> + <span class="bu">Into</span>&lt;<span class="dt">f64</span>&gt;&gt;(&amp;<span class="kw">self</span>, x: S) -&gt; <span class="dt">f64</span>;</span>
+<span id="cb46-10"><a href="statistics.html#cb46-10"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="bernoulli-distribution" class="section level3">
@@ -385,14 +388,14 @@ Wishart</li>
 <li>If <span class="math inline">\(U \leq \mu\)</span>, then <span class="math inline">\(X = 1\)</span> else <span class="math inline">\(X = 0\)</span></li>
 </ol></li>
 <li><p>Usage is very simple</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> b = Bernoulli(<span class="dv">0.1</span>); <span class="co">// Bern(x | 0.1)</span>
-    b.sample(<span class="dv">100</span>).print();  <span class="co">// Generate 100 samples</span>
-    b.pdf(<span class="dv">0</span>).print();       <span class="co">// 0.9</span>
-    b.mean().print();       <span class="co">// 0.1</span>
-    b.var().print();        <span class="co">// 0.09 (approximately)</span>
-    b.sd().print();         <span class="co">// 0.3  (approximately)</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb47-1"><a href="statistics.html#cb47-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb47-2"><a href="statistics.html#cb47-2"></a>    <span class="kw">let</span> b = Bernoulli(<span class="dv">0.1</span>); <span class="co">// Bern(x | 0.1)</span></span>
+<span id="cb47-3"><a href="statistics.html#cb47-3"></a>    b.sample(<span class="dv">100</span>).print();  <span class="co">// Generate 100 samples</span></span>
+<span id="cb47-4"><a href="statistics.html#cb47-4"></a>    b.pdf(<span class="dv">0</span>).print();       <span class="co">// 0.9</span></span>
+<span id="cb47-5"><a href="statistics.html#cb47-5"></a>    b.mean().print();       <span class="co">// 0.1</span></span>
+<span id="cb47-6"><a href="statistics.html#cb47-6"></a>    b.var().print();        <span class="co">// 0.09 (approximately)</span></span>
+<span id="cb47-7"><a href="statistics.html#cb47-7"></a>    b.sd().print();         <span class="co">// 0.3  (approximately)</span></span>
+<span id="cb47-8"><a href="statistics.html#cb47-8"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="uniform-distribution" class="section level3">
@@ -409,15 +412,15 @@ Wishart</li>
 <li>Var : <span class="math inline">\(\frac{1}{12}(b-a)^2\)</span></li>
 </ul></li>
 <li><p>To generate uniform random number, Peroxide uses <code>rand</code> crate</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">// Uniform(start, end)</span>
-    <span class="kw">let</span> a = Uniform(<span class="dv">0</span>, <span class="dv">1</span>);
-    a.sample(<span class="dv">100</span>).print();
-    a.pdf(<span class="dv">0.2</span>).print();
-    a.mean().print();
-    a.var().print();
-    a.sd().print();
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb48-1"><a href="statistics.html#cb48-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb48-2"><a href="statistics.html#cb48-2"></a>    <span class="co">// Uniform(start, end)</span></span>
+<span id="cb48-3"><a href="statistics.html#cb48-3"></a>    <span class="kw">let</span> a = Uniform(<span class="dv">0</span>, <span class="dv">1</span>);</span>
+<span id="cb48-4"><a href="statistics.html#cb48-4"></a>    a.sample(<span class="dv">100</span>).print();</span>
+<span id="cb48-5"><a href="statistics.html#cb48-5"></a>    a.pdf(<span class="dv">0.2</span>).print();</span>
+<span id="cb48-6"><a href="statistics.html#cb48-6"></a>    a.mean().print();</span>
+<span id="cb48-7"><a href="statistics.html#cb48-7"></a>    a.var().print();</span>
+<span id="cb48-8"><a href="statistics.html#cb48-8"></a>    a.sd().print();</span>
+<span id="cb48-9"><a href="statistics.html#cb48-9"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="normal-distribution" class="section level3">
@@ -439,15 +442,15 @@ Wishart</li>
 <ul>
 <li>Code is based on a <a href="https://www.seehuhn.de/pages/ziggurat.html">C implementation</a> by Jochen Voss.</li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="co">// Normal(mean, std)</span>
-    <span class="kw">let</span> a = Normal(<span class="dv">0</span>, <span class="dv">1</span>); <span class="co">// Standard normal</span>
-    a.sample(<span class="dv">100</span>).print();
-    a.pdf(<span class="dv">0</span>).print(); <span class="co">// Maximum probability</span>
-    a.mean().print();
-    a.var().print();
-    a.sd().print();
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb49-1"><a href="statistics.html#cb49-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb49-2"><a href="statistics.html#cb49-2"></a>    <span class="co">// Normal(mean, std)</span></span>
+<span id="cb49-3"><a href="statistics.html#cb49-3"></a>    <span class="kw">let</span> a = Normal(<span class="dv">0</span>, <span class="dv">1</span>); <span class="co">// Standard normal</span></span>
+<span id="cb49-4"><a href="statistics.html#cb49-4"></a>    a.sample(<span class="dv">100</span>).print();</span>
+<span id="cb49-5"><a href="statistics.html#cb49-5"></a>    a.pdf(<span class="dv">0</span>).print(); <span class="co">// Maximum probability</span></span>
+<span id="cb49-6"><a href="statistics.html#cb49-6"></a>    a.mean().print();</span>
+<span id="cb49-7"><a href="statistics.html#cb49-7"></a>    a.var().print();</span>
+<span id="cb49-8"><a href="statistics.html#cb49-8"></a>    a.sd().print();</span>
+<span id="cb49-9"><a href="statistics.html#cb49-9"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="beta-distribution" class="section level3">

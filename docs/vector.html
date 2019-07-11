@@ -24,7 +24,7 @@
 <meta name="author" content="Axect" />
 
 
-<meta name="date" content="2019-06-27" />
+<meta name="date" content="2019-07-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,9 +50,9 @@
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -62,14 +62,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -78,9 +80,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -208,6 +210,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.2.2" data-path="ode.html"><a href="ode.html#simple-1d-runge-kutta"><i class="fa fa-check"></i><b>9.2.2</b> Simple 1D Runge-Kutta</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="10" data-path="plot.html"><a href="plot.html"><i class="fa fa-check"></i><b>10</b> Plot</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -239,10 +242,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Original way: <code>print!("{:?}", a);</code></li>
 <li>Peroxide way: <code>a.print();</code> - <strong>Round-off to fourth digit</strong></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">vec!</span><span class="op">[</span><span class="dv">2f64</span>.sqrt()<span class="op">]</span>;
-    a.print(); <span class="co">// [1.4142]</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb3-1"><a href="vector.html#cb3-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb3-2"><a href="vector.html#cb3-2"></a>    <span class="kw">let</span> a = <span class="pp">vec!</span><span class="op">[</span><span class="dv">2f64</span>.sqrt()<span class="op">]</span>;</span>
+<span id="cb3-3"><a href="vector.html#cb3-3"></a>    a.print(); <span class="co">// [1.4142]</span></span>
+<span id="cb3-4"><a href="vector.html#cb3-4"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="syntactic-sugar-for-vecf64" class="section level2">
@@ -250,29 +253,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><p>There is useful macro for <code>Vec&lt;f64&gt;</code></p></li>
 <li><p>For <code>R</code>, there is <code>c</code></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R</span>
-a =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</code></pre></li>
+<pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="vector.html#cb4-1"></a><span class="co"># R</span></span>
+<span id="cb4-2"><a href="vector.html#cb4-2"></a>a =<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>)</span></code></pre></div></li>
 <li><p>For <code>Peroxide</code>, there is <code>c!</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="co">// Rust</span>
-<span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb5-1"><a href="vector.html#cb5-1"></a><span class="co">// Rust</span></span>
+<span id="cb5-2"><a href="vector.html#cb5-2"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb5-3"><a href="vector.html#cb5-3"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
+<span id="cb5-4"><a href="vector.html#cb5-4"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="from-ranges-to-vector" class="section level2">
 <h2><span class="header-section-number">3.3</span> From ranges to Vector</h2>
 <ul>
 <li><p>For <code>R</code>, there is <code>seq</code> to declare sequence.</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># R</span>
-a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>)
-<span class="kw">print</span>(a)
-<span class="co"># [1] 1 2 3 4</span></code></pre></li>
+<pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="vector.html#cb6-1"></a><span class="co"># R</span></span>
+<span id="cb6-2"><a href="vector.html#cb6-2"></a>a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb6-3"><a href="vector.html#cb6-3"></a><span class="kw">print</span>(a)</span>
+<span id="cb6-4"><a href="vector.html#cb6-4"></a><span class="co"># [1] 1 2 3 4</span></span></code></pre></div></li>
 <li><p>For <code>peroxide</code>, there is <code>seq</code> to declare sequence.</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = seq(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>);
-    a.print();
-    <span class="co">// [1, 2, 3, 4]</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb7-1"><a href="vector.html#cb7-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb7-2"><a href="vector.html#cb7-2"></a>    <span class="kw">let</span> a = seq(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">1</span>);</span>
+<span id="cb7-3"><a href="vector.html#cb7-3"></a>    a.print();</span>
+<span id="cb7-4"><a href="vector.html#cb7-4"></a>    <span class="co">// [1, 2, 3, 4]</span></span>
+<span id="cb7-5"><a href="vector.html#cb7-5"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="vector-operation" class="section level2">
@@ -287,40 +290,40 @@ a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span
 <li><code>dot(&amp;self, other: Vec&lt;f64&gt;) -&gt; f64</code></li>
 <li><code>norm(&amp;self) -&gt; f64</code></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
-    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);
-
-    a.add(&amp;b).print();
-    a.sub(&amp;b).print();
-    a.mul(&amp;b).print();
-    a.div(&amp;b).print();
-    a.dot(&amp;b).print();
-    a.norm().print();
-
-    <span class="co">// [5, 5, 5, 5]</span>
-    <span class="co">// [-3, -1, 1, 3]</span>
-    <span class="co">// [4, 6, 6, 4]</span>
-    <span class="co">// [0.25, 0.6667, 1.5, 4]</span>
-    <span class="co">// 20</span>
-    <span class="co">// 5.477225575051661 // sqrt(30)</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="vector.html#cb8-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb8-2"><a href="vector.html#cb8-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
+<span id="cb8-3"><a href="vector.html#cb8-3"></a>    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">1</span>);</span>
+<span id="cb8-4"><a href="vector.html#cb8-4"></a></span>
+<span id="cb8-5"><a href="vector.html#cb8-5"></a>    a.add(&amp;b).print();</span>
+<span id="cb8-6"><a href="vector.html#cb8-6"></a>    a.sub(&amp;b).print();</span>
+<span id="cb8-7"><a href="vector.html#cb8-7"></a>    a.mul(&amp;b).print();</span>
+<span id="cb8-8"><a href="vector.html#cb8-8"></a>    a.div(&amp;b).print();</span>
+<span id="cb8-9"><a href="vector.html#cb8-9"></a>    a.dot(&amp;b).print();</span>
+<span id="cb8-10"><a href="vector.html#cb8-10"></a>    a.norm().print();</span>
+<span id="cb8-11"><a href="vector.html#cb8-11"></a></span>
+<span id="cb8-12"><a href="vector.html#cb8-12"></a>    <span class="co">// [5, 5, 5, 5]</span></span>
+<span id="cb8-13"><a href="vector.html#cb8-13"></a>    <span class="co">// [-3, -1, 1, 3]</span></span>
+<span id="cb8-14"><a href="vector.html#cb8-14"></a>    <span class="co">// [4, 6, 6, 4]</span></span>
+<span id="cb8-15"><a href="vector.html#cb8-15"></a>    <span class="co">// [0.25, 0.6667, 1.5, 4]</span></span>
+<span id="cb8-16"><a href="vector.html#cb8-16"></a>    <span class="co">// 20</span></span>
+<span id="cb8-17"><a href="vector.html#cb8-17"></a>    <span class="co">// 5.477225575051661 // sqrt(30)</span></span>
+<span id="cb8-18"><a href="vector.html#cb8-18"></a><span class="op">}</span></span></code></pre></div></li>
 <li>And there are some useful operations too.
 <ul>
 <li><code>pow(&amp;self, usize) -&gt; Vec&lt;f64&gt;</code></li>
 <li><code>powf(&amp;self, f64) -&gt; Vec&lt;f64&gt;</code></li>
 <li><code>sqrt(&amp;self) -&gt; Vec&lt;f64&gt;</code></li>
 </ul>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
-
-    a.pow(<span class="dv">2</span>).print();
-    a.powf(<span class="dv">0.5</span>).print();
-    a.sqrt().print();
-    <span class="co">// [1, 4, 9, 16]</span>
-    <span class="co">// [1, 1.4142, 1.7321, 2]</span>
-    <span class="co">// [1, 1.4142, 1.7321, 2]</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb9-1"><a href="vector.html#cb9-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb9-2"><a href="vector.html#cb9-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
+<span id="cb9-3"><a href="vector.html#cb9-3"></a></span>
+<span id="cb9-4"><a href="vector.html#cb9-4"></a>    a.pow(<span class="dv">2</span>).print();</span>
+<span id="cb9-5"><a href="vector.html#cb9-5"></a>    a.powf(<span class="dv">0.5</span>).print();</span>
+<span id="cb9-6"><a href="vector.html#cb9-6"></a>    a.sqrt().print();</span>
+<span id="cb9-7"><a href="vector.html#cb9-7"></a>    <span class="co">// [1, 4, 9, 16]</span></span>
+<span id="cb9-8"><a href="vector.html#cb9-8"></a>    <span class="co">// [1, 1.4142, 1.7321, 2]</span></span>
+<span id="cb9-9"><a href="vector.html#cb9-9"></a>    <span class="co">// [1, 1.4142, 1.7321, 2]</span></span>
+<span id="cb9-10"><a href="vector.html#cb9-10"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="concatenation" class="section level2">
@@ -329,15 +332,15 @@ a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span
 <ul>
 <li><p><code>cat(T, Vec&lt;T&gt;) -&gt; Vec&lt;f64&gt;</code></p></li>
 <li><p><code>concat(Vec&lt;T&gt;, Vec&lt;T&gt;) -&gt; Vec&lt;T&gt;</code></p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
-    cat(<span class="dv">0f64</span>, a.clone()).print();
-    <span class="co">// [0, 1, 2, 3, 4]</span>
-
-    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>);
-    concat(a, b).print();
-    <span class="co">// [1, 2, 3, 4, 5, 6, 7, 8]</span>
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb10-1"><a href="vector.html#cb10-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb10-2"><a href="vector.html#cb10-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
+<span id="cb10-3"><a href="vector.html#cb10-3"></a>    cat(<span class="dv">0f64</span>, a.clone()).print();</span>
+<span id="cb10-4"><a href="vector.html#cb10-4"></a>    <span class="co">// [0, 1, 2, 3, 4]</span></span>
+<span id="cb10-5"><a href="vector.html#cb10-5"></a></span>
+<span id="cb10-6"><a href="vector.html#cb10-6"></a>    <span class="kw">let</span> b = <span class="pp">c!</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>);</span>
+<span id="cb10-7"><a href="vector.html#cb10-7"></a>    concat(a, b).print();</span>
+<span id="cb10-8"><a href="vector.html#cb10-8"></a>    <span class="co">// [1, 2, 3, 4, 5, 6, 7, 8]</span></span>
+<span id="cb10-9"><a href="vector.html#cb10-9"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 </div>
 <div id="conversion-to-matrix" class="section level2">
@@ -346,14 +349,14 @@ a =<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1</span
 <ul>
 <li><p><code>to_matrix(&amp;self) -&gt; Matrix</code> : Vector to column matrix</p></li>
 <li><p><code>transpose(&amp;self) -&gt; Matrix</code> : Vector to row matrix</p>
-<pre class="sourceCode rust"><code class="sourceCode rust"><span class="kw">fn</span> main() <span class="op">{</span>
-    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);
-    <span class="kw">let</span> m_col = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">4</span>, <span class="dv">1</span>, Col); <span class="co">// (4,1) Matrix</span>
-    <span class="pp">assert_eq!</span>(a.to_matrix(), m_col);
-
-    <span class="kw">let</span> m_row = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">1</span>, <span class="dv">4</span>, Row); <span class="co">// (1,4) Matrix</span>
-    <span class="pp">assert_eq!</span>(a.transpose(), m_row);
-<span class="op">}</span></code></pre></li>
+<pre class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="vector.html#cb11-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb11-2"><a href="vector.html#cb11-2"></a>    <span class="kw">let</span> a = <span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>);</span>
+<span id="cb11-3"><a href="vector.html#cb11-3"></a>    <span class="kw">let</span> m_col = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">4</span>, <span class="dv">1</span>, Col); <span class="co">// (4,1) Matrix</span></span>
+<span id="cb11-4"><a href="vector.html#cb11-4"></a>    <span class="pp">assert_eq!</span>(a.to_matrix(), m_col);</span>
+<span id="cb11-5"><a href="vector.html#cb11-5"></a></span>
+<span id="cb11-6"><a href="vector.html#cb11-6"></a>    <span class="kw">let</span> m_row = matrix(<span class="pp">c!</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>), <span class="dv">1</span>, <span class="dv">4</span>, Row); <span class="co">// (1,4) Matrix</span></span>
+<span id="cb11-7"><a href="vector.html#cb11-7"></a>    <span class="pp">assert_eq!</span>(a.transpose(), m_row);</span>
+<span id="cb11-8"><a href="vector.html#cb11-8"></a><span class="op">}</span></span></code></pre></div></li>
 </ul>
 
 </div>
